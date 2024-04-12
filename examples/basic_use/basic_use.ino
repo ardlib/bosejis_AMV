@@ -42,6 +42,11 @@ uint32_t value1 = 0x1234ABCD;
 size_t sz;
 uint8_t buf[8];
 ID name;
+uint8_t value2[6] = {
+   0x03, 0x04, 0xAA, 0xDB, 0x3C, 0x71
+};
+uint16_t checksum;
+char strm[20];
 
 void setup() {
    Serial.begin(115200);
@@ -89,4 +94,12 @@ void loop() {
       }
       Serial.println();
    }
+   checksum = Checksum(value2, 6);
+   Serial.println("Checksum and HexStream usage");
+   Serial.print("Input Data     : ");
+   sz = 20;
+   HexStream(value2, 6, strm, &sz);
+   Serial.println(strm);
+   Serial.print("Checksum Value : 0x");
+   Serial.println(checksum, HEX);
 }

@@ -1,6 +1,6 @@
 {
   "name": "bosejis_AMV",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "The AMV Protocol Implementation",
   "keywords": "AMV, rest, http, web",
   "authors": {

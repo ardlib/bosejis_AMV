@@ -31,6 +31,8 @@ Matra			KEYWORD2
 IsVariable		KEYWORD2
 IsHigherOrder	KEYWORD2
 Parichay		KEYWORD2
+Checksum		KEYWORD2
+HexStream		KEYWORD2
 
 # Structures, Pre-Processor and Other Functions (KEYWORD3)
 
