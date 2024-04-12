@@ -1,0 +1,73 @@
+# Boseji's AMV Library
+
+# Primary Header and Classes (KEYWORD1)
+amv			KEYWORD1	amv
+AMV			KEYWORD1
+Ankitak		KEYWORD1
+Vastu		KEYWORD1
+ID			KEYWORD1
+Proto		KEYWORD1
+CMD			KEYWORD1
+ADDR		KEYWORD1
+CRC32		KEYWORD1
+Sampurna	KEYWORD1
+Array		KEYWORD1
+Tuples		KEYWORD1
+ChunkTotal	KEYWORD1
+ChunkIndex	KEYWORD1
+
+# Instances, Methods and Functions (KEYWORD2)
+Bytes			KEYWORD2
+Set				KEYWORD2
+WithPrakriya	KEYWORD2
+WithChecksum	KEYWORD2
+HasPrakriya		KEYWORD2
+HasChecksum		KEYWORD2
+Request			KEYWORD2
+Response		KEYWORD2
+IsRequest		KEYWORD2
+IsResponse		KEYWORD2
+Matra			KEYWORD2
+IsVariable		KEYWORD2
+IsHigherOrder	KEYWORD2
+Parichay		KEYWORD2
+
+# Structures, Pre-Processor and Other Functions (KEYWORD3)
+
+# Constants (LITERAL1)
+Ankitak_Request		LITERAL1
+Ankitak_Response	LITERAL1
+Ankitak_Checksum	LITERAL1
+Ankitak_Prakriya	LITERAL1
+Vastu_Bytes			LITERAL1
+Vastu_U16			LITERAL1
+Vastu_U32			LITERAL1
+Vastu_U64			LITERAL1
+Vastu_F32			LITERAL1
+Vastu_F64			LITERAL1
+Vastu_U8			LITERAL1
+Vastu_I8			LITERAL1
+Vastu_I16			LITERAL1
+Vastu_I32			LITERAL1
+Vastu_Bool			LITERAL1
+Vastu_String		LITERAL1
+Vastu_I64			LITERAL1
+Vastu_ID			LITERAL1
+Vastu_Proto			LITERAL1
+Vastu_CMD			LITERAL1
+Vastu_ADDR			LITERAL1
+Vastu_CRC32			LITERAL1
+Vastu_Sampurna		LITERAL1
+Vastu_Array			LITERAL1
+Vastu_Tuples		LITERAL1
+Vastu_ChunkTotal	LITERAL1
+Vastu_ChunkIndex	LITERAL1
+
+# Other Parts (LITERAL2)
+Ankitak_Mask	LITERAL2
+Vastu_Mask		LITERAL2
+Vastu_Error		LITERAL2
+HalfWORD		LITERAL2
+WORD			LITERAL2
+DWORD			LITERAL2
+QWORD			LITERAL2

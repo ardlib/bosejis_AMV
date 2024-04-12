@@ -1,0 +1,26 @@
+{
+  "name": "bosejis_AMV",
+  "version": "0.0.1",
+  "description": "The AMV Protocol Implementation",
+  "keywords": "AMV, rest, http, web",
+  "authors": {
+    "name": "Abhijit Bose (aka. Boseji",
+    "url": "https://github.com/boseji",
+    "maintainer": true
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ardlib/bosejis_AMV.git"
+  },
+  "homepage": "https://boseji.com",
+  "export": {
+    "exclude": [
+      "extras",
+      "docs"
+    ]
+  },
+  "dependencies": {},
+  "frameworks": "*",
+  "platforms": "*",
+  "examples": "examples/*/*/*.ino"
+}
