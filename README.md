@@ -38,7 +38,7 @@ Please read [CONTRIBUTING.md](https://github.com/ardlib/bosejis_AMV/blob/master/
 
 `SPDX: GPL-3.0-or-later`
 
-**bosejis_AMV - The AMV Protocol Implementation**
+`bosejis_AMV` - The AMV Protocol Implementation
 
 Copyright (C) 2012-2024 by Abhijit Bose (aka. Boseji)
 
