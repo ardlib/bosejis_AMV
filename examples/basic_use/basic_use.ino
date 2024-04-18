@@ -53,6 +53,7 @@ uint8_t value2[VALUE2_MAX] = {
 };
 uint16_t checksum;
 char strm[CHARR_MAX];
+CRC32 crc;
 
 void setup() {
    Serial.begin(115200);
@@ -100,6 +101,7 @@ void loop() {
       }
       Serial.println();
    }
+   Serial.println();
    checksum = Checksum(value2, VALUE2_MAX);
    Serial.println("Checksum and HexStream usage");
    Serial.print("Input Data     : ");
@@ -108,12 +110,18 @@ void loop() {
    Serial.println(strm);
    Serial.print("Checksum Value : 0x");
    Serial.println(checksum, HEX);
+   Serial.println();
+   Serial.println("HexDecode and CalcCRC32_CCITT usage");
    sz2 = BUF_MAX;
    HexDecode(strm, sz, buf, &sz2);
-   Serial.print("Decoded     : ");
+   Serial.print("HexDecode      : ");
    for(int i = 0; i < sz2; i++) {
       Serial.print(buf[i], HEX);
       Serial.print(' ');
    }
+   Serial.println();
+   crc.val = CalcCRC32_CCITT(value2, VALUE2_MAX);
+   Serial.print("CalcCRC32_CCITT: ");
+   Serial.println(crc.val, HEX);
    Serial.println();
 }
