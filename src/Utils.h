@@ -56,7 +56,7 @@ uint16_t Checksum(uint8_t *buf, size_t sz) {
 bool HexStream(uint8_t *in, size_t in_max, char *out, size_t *out_max) {
     size_t i,j;
     byte b;
-    if (*out_max < (in_max * 2)) {
+    if (*out_max < (in_max << 1)) {
         return false;
     }
     memset(out, 0, *out_max);
@@ -68,6 +68,39 @@ bool HexStream(uint8_t *in, size_t in_max, char *out, size_t *out_max) {
     }
     *out_max = j;
     return true;
+}
+
+// HexDecode helps to convert a hex encoded character buffer back into
+// its byte stream form for processing.
+bool HexDecode(char *in, size_t in_max, uint8_t *out, size_t *out_max) {
+  size_t i,j;
+  byte b;
+  if (*out_max < (in_max >> 1)) {
+    return false;
+  }
+  memset(out, 0, *out_max);
+  for (i = 0, j = 0; i < in_max; i++ ) {
+    b = 0;
+    if(in[i] >= 'A' && in[i] <= 'F') {
+      b = ((uint8_t)(in[i]-'A')) + 10U;
+    } else if(in[i] >= 'a' && in[i] <= 'f') {
+      b = ((uint8_t)(in[i]-'a')) + 10U;
+    } else if (in[i] >= '0' && in[i] <= '9') {
+      b = ((uint8_t)(in[i]-'0'));
+    }
+    i++; // Next Character
+    b <<= 4; // Make the Lower nibble space
+    if(in[i] >= 'A' && in[i] <= 'F') {
+      b |= ((uint8_t)(in[i]-'A')) + 10U;
+    } else if(in[i] >= 'a' && in[i] <= 'f') {
+      b |= ((uint8_t)(in[i]-'a')) + 10U;
+    } else if (in[i] >= '0' && in[i] <= '9') {
+      b |= ((uint8_t)(in[i]-'0'));
+    }
+    out[j++] = b;
+  }
+  *out_max = j;
+  return true;
 }
 
 #endif /* _UTILS_H_ */

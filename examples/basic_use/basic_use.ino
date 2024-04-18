@@ -37,16 +37,22 @@
 
 #include <bosejis_AMV.h>
 
+// Size Constants
+#define BUF_MAX 8
+#define CHARR_MAX 20
+#define VALUE2_MAX 6
+
+//Global Variables
 byte a; // To be used for Ankitak
 uint32_t value1 = 0x1234ABCD;
-size_t sz;
-uint8_t buf[8];
+size_t sz,sz2;
+uint8_t buf[BUF_MAX];
 ID name;
-uint8_t value2[6] = {
+uint8_t value2[VALUE2_MAX] = {
    0x03, 0x04, 0xAA, 0xDB, 0x3C, 0x71
 };
 uint16_t checksum;
-char strm[20];
+char strm[CHARR_MAX];
 
 void setup() {
    Serial.begin(115200);
@@ -67,7 +73,7 @@ void loop() {
    Serial.println(Ankitak.IsResponse(a));
    Serial.print("Has Checksum  : ");
    Serial.println(Ankitak.HasChecksum(a));
-   if (Vastu.Bytes(value1, buf, 8, &sz)) {
+   if (Vastu.Bytes(value1, buf, BUF_MAX, &sz)) {
       Serial.println("Vastu - Bytes usage1");
       Serial.print("Original Value: 0x");
       Serial.println(value1, HEX);
@@ -81,7 +87,7 @@ void loop() {
       Serial.println();
    }
    name.val = 0x6789EF12;
-   if (Vastu.Bytes(name, buf, 8, &sz)) {
+   if (Vastu.Bytes(name, buf, BUF_MAX, &sz)) {
       Serial.println("Vastu - Bytes usage2");
       Serial.print("Original Value: 0x");
       Serial.println(name.val, HEX);
@@ -94,12 +100,20 @@ void loop() {
       }
       Serial.println();
    }
-   checksum = Checksum(value2, 6);
+   checksum = Checksum(value2, VALUE2_MAX);
    Serial.println("Checksum and HexStream usage");
    Serial.print("Input Data     : ");
-   sz = 20;
-   HexStream(value2, 6, strm, &sz);
+   sz = CHARR_MAX;
+   HexStream(value2, VALUE2_MAX, strm, &sz);
    Serial.println(strm);
    Serial.print("Checksum Value : 0x");
    Serial.println(checksum, HEX);
+   sz2 = BUF_MAX;
+   HexDecode(strm, sz, buf, &sz2);
+   Serial.print("Decoded     : ");
+   for(int i = 0; i < sz2; i++) {
+      Serial.print(buf[i], HEX);
+      Serial.print(' ');
+   }
+   Serial.println();
 }
