@@ -188,69 +188,68 @@ typedef union _Roop_t {
   int32_t I32;
   int64_t I64;
   uint8_t Bytes[8];
-}Roop;
+} Roop;
 
 // ID is an 32-bit Identifier or Small Address type
-typedef union ID_t{
+typedef union ID_t {
   uint32_t val;
   byte Bytes[4];
 } ID;
 
 // Proto is an 32-bit Protocol Identifier / Version type
-typedef union Proto_t{
+typedef union Proto_t {
   uint32_t val;
   byte Bytes[4];
- }Proto;
+} Proto;
 
 // CMD is 32-bit Command type
 typedef union CMD_t {
   uint32_t val;
   byte Bytes[4];
-}CMD;
+} CMD;
 
 // ADDR is the Full IEEE IPv6 64-Bit Address type
 typedef union ADDR_t {
   uint64_t val;
   byte Bytes[8];
-}ADDR;
+} ADDR;
 
 // CRC32 for sending CRC32 CCITT Poly type data
 typedef struct CRC32_t {
   uint32_t val;
-}CRC32;
+} CRC32;
 
 // Sampurna for sending total transaction size in Bytes units.
 // This includes the whole block of data sent as one Transaction.
 // It may be split into Chunks as needed.
 typedef struct Sampurna_t {
   uint64_t val;
- }Sampurna;
+} Sampurna;
 
 // Array is the size of a collection of Pulinda taken together
 typedef struct Array_t {
   uint16_t val;
-}Array;
+} Array;
 
 // Tuples is the size of a MAP like sequence containing
 // Key:Value Pairs of Pulinda
 typedef struct Typles_t {
   uint16_t val;
-}Tuples;
+} Tuples;
 
 // ChunkTotal is the total numbers of chunks in the sandesh
 typedef struct ChunkTotal_t {
   uint16_t val;
-}ChunkTotal;
+} ChunkTotal;
 
 // ChunkIndex is the identifier for the current chunk
 typedef struct ChunkIndex_t {
   uint16_t val;
-}ChunkIndex;
+} ChunkIndex;
 
 // Vastu_t is the C++ representation of वस्तु
 class Vastu_t {
-  public:
-
+public:
   // Matra returns the length of the first data parameter in पुलिंदा for
   // identification of वस्तु type.
   // In case there are error it returns the special Error value.
@@ -258,55 +257,55 @@ class Vastu_t {
   // In order to determine if the वस्तु type includes a length or not,
   // the `IsVariable` functions needs to be used.
   byte Matra(byte v) {
-    switch(v&Vastu_Mask) {
-      case Vastu_Bytes:
-        return WORD;
-      case Vastu_U16:
-        return WORD;
-      case Vastu_U32:
-        return DWORD;
-      case Vastu_U64:
-        return QWORD;
-      case Vastu_F32:
-        return DWORD;
-      case Vastu_F64:
-        return QWORD;
-      case Vastu_U8:
-        return HalfWORD;
-      case Vastu_I8:
-        return HalfWORD;
-      case Vastu_I16:
-        return WORD;
-      case Vastu_I32:
-        return DWORD;
-      case Vastu_Bool:
-        return HalfWORD;
-      case Vastu_String:
-        return WORD;
-      case Vastu_I64:
-        return QWORD;
-      case Vastu_ID:
-        return DWORD;
-      case Vastu_Proto:
-        return DWORD;
-      case Vastu_CMD:
-        return DWORD;
-      case Vastu_ADDR:
-        return QWORD;
-      case Vastu_CRC32:
-        return DWORD;
-      case Vastu_Sampurna:
-        return QWORD;
-      case Vastu_Array:
-        return WORD;
-      case Vastu_Tuples:
-        return WORD;
-      case Vastu_ChunkTotal:
-        return WORD;
-      case Vastu_ChunkIndex:
-        return WORD;
-      default:
-        return Vastu_Error;
+    switch (v & Vastu_Mask) {
+    case Vastu_Bytes:
+      return WORD;
+    case Vastu_U16:
+      return WORD;
+    case Vastu_U32:
+      return DWORD;
+    case Vastu_U64:
+      return QWORD;
+    case Vastu_F32:
+      return DWORD;
+    case Vastu_F64:
+      return QWORD;
+    case Vastu_U8:
+      return HalfWORD;
+    case Vastu_I8:
+      return HalfWORD;
+    case Vastu_I16:
+      return WORD;
+    case Vastu_I32:
+      return DWORD;
+    case Vastu_Bool:
+      return HalfWORD;
+    case Vastu_String:
+      return WORD;
+    case Vastu_I64:
+      return QWORD;
+    case Vastu_ID:
+      return DWORD;
+    case Vastu_Proto:
+      return DWORD;
+    case Vastu_CMD:
+      return DWORD;
+    case Vastu_ADDR:
+      return QWORD;
+    case Vastu_CRC32:
+      return DWORD;
+    case Vastu_Sampurna:
+      return QWORD;
+    case Vastu_Array:
+      return WORD;
+    case Vastu_Tuples:
+      return WORD;
+    case Vastu_ChunkTotal:
+      return WORD;
+    case Vastu_ChunkIndex:
+      return WORD;
+    default:
+      return Vastu_Error;
     }
   }
 
@@ -314,32 +313,32 @@ class Vastu_t {
   // It also infers that if the size is included in the पुलिंदा or not.
   bool IsVariable(byte v) {
     switch (v) {
-      case Vastu_Bytes:
-      case Vastu_String:
-        return true;
-      default:
-        return false;
+    case Vastu_Bytes:
+    case Vastu_String:
+      return true;
+    default:
+      return false;
     }
   }
 
-  // IsHighOrder returns if the वस्तु type is of Higher order collection 
+  // IsHighOrder returns if the वस्तु type is of Higher order collection
   // or not.
   bool IsHigherOrder(byte v) {
     switch (v) {
-      case Vastu_Array:
-      case Vastu_Tuples:
-      case Vastu_ChunkTotal:
-      case Vastu_ChunkIndex:
-        return true;
-      default:
-        return false;
+    case Vastu_Array:
+    case Vastu_Tuples:
+    case Vastu_ChunkTotal:
+    case Vastu_ChunkIndex:
+      return true;
+    default:
+      return false;
     }
   }
 
   // Parichay helps to Determine the Vastu Type
 
-  byte Parichay(byte* b) { return Vastu_Bytes; }
-  byte Parichay(const byte* b) { return Vastu_Bytes; }
+  byte Parichay(byte *b) { return Vastu_Bytes; }
+  byte Parichay(const byte *b) { return Vastu_Bytes; }
   byte Parichay(uint16_t b) { return Vastu_U16; }
   byte Parichay(uint32_t b) { return Vastu_U32; }
   byte Parichay(uint64_t b) { return Vastu_U64; }
@@ -368,8 +367,8 @@ class Vastu_t {
   // Bytes Helps to convert Vastu into its uint8_t[] representation.
   // The `sz` here serves to indicate size initially and return the
   // matra.
-  
-  bool Bytes(uint16_t val, uint8_t *b, size_t *sz){
+
+  bool Bytes(uint16_t val, uint8_t *b, size_t *sz) {
     byte v = Parichay(val);
     Roop r;
     byte matra = Matra(v);
@@ -378,12 +377,12 @@ class Vastu_t {
     }
     *sz = matra; // Get the Matra
     r.U16 = val;
-    // Copy Data    
+    // Copy Data
     memcpy(b, r.Bytes, matra);
     return true;
   }
 
-  bool Bytes(uint32_t val, uint8_t *b, size_t *sz){
+  bool Bytes(uint32_t val, uint8_t *b, size_t *sz) {
     byte v = Parichay(val);
     Roop r;
     byte matra = Matra(v);
@@ -392,12 +391,12 @@ class Vastu_t {
     }
     *sz = matra; // Get the Matra
     r.U32 = val;
-    // Copy Data    
+    // Copy Data
     memcpy(b, r.Bytes, matra);
     return true;
   }
 
-  bool Bytes(uint64_t val, uint8_t *b, size_t *sz){
+  bool Bytes(uint64_t val, uint8_t *b, size_t *sz) {
     byte v = Parichay(val);
     Roop r;
     byte matra = Matra(v);
@@ -406,12 +405,12 @@ class Vastu_t {
     }
     *sz = matra; // Get the Matra
     r.U64 = val;
-    // Copy Data    
+    // Copy Data
     memcpy(b, r.Bytes, matra);
     return true;
   }
 
-  bool Bytes(float val, uint8_t *b, size_t *sz){
+  bool Bytes(float val, uint8_t *b, size_t *sz) {
     byte v = Parichay(val);
     Roop r;
     byte matra = Matra(v);
@@ -420,12 +419,12 @@ class Vastu_t {
     }
     *sz = matra; // Get the Matra
     r.F32 = val;
-    // Copy Data    
+    // Copy Data
     memcpy(b, r.Bytes, matra);
     return true;
   }
 
-  bool Bytes(double val, uint8_t *b, size_t *sz){
+  bool Bytes(double val, uint8_t *b, size_t *sz) {
     byte v = Parichay(val);
     Roop r;
     byte matra = Matra(v);
@@ -434,12 +433,12 @@ class Vastu_t {
     }
     *sz = matra; // Get the Matra
     r.F64 = val;
-    // Copy Data    
+    // Copy Data
     memcpy(b, r.Bytes, matra);
     return true;
   }
 
-  bool Bytes(uint8_t val, uint8_t *b, size_t *sz){
+  bool Bytes(uint8_t val, uint8_t *b, size_t *sz) {
     byte v = Parichay(val);
     Roop r;
     byte matra = Matra(v);
@@ -448,12 +447,12 @@ class Vastu_t {
     }
     *sz = matra; // Get the Matra
     r.U8 = val;
-    // Copy Data    
+    // Copy Data
     memcpy(b, r.Bytes, matra);
     return true;
   }
 
-  bool Bytes(int8_t val, uint8_t *b, size_t *sz){
+  bool Bytes(int8_t val, uint8_t *b, size_t *sz) {
     byte v = Parichay(val);
     Roop r;
     byte matra = Matra(v);
@@ -462,7 +461,7 @@ class Vastu_t {
     }
     *sz = matra; // Get the Matra
     r.I8 = val;
-    // Copy Data    
+    // Copy Data
     memcpy(b, r.Bytes, matra);
     return true;
   }
@@ -471,7 +470,7 @@ class Vastu_t {
     return Bytes(static_cast<int8_t>(val), b, sz);
   }
 
-  bool Bytes(int16_t val, uint8_t *b, size_t *sz){
+  bool Bytes(int16_t val, uint8_t *b, size_t *sz) {
     byte v = Parichay(val);
     Roop r;
     byte matra = Matra(v);
@@ -480,12 +479,12 @@ class Vastu_t {
     }
     *sz = matra; // Get the Matra
     r.I16 = val;
-    // Copy Data    
+    // Copy Data
     memcpy(b, r.Bytes, matra);
     return true;
   }
 
-  bool Bytes(int32_t val, uint8_t *b, size_t *sz){
+  bool Bytes(int32_t val, uint8_t *b, size_t *sz) {
     byte v = Parichay(val);
     Roop r;
     byte matra = Matra(v);
@@ -494,12 +493,12 @@ class Vastu_t {
     }
     *sz = matra; // Get the Matra
     r.I32 = val;
-    // Copy Data    
+    // Copy Data
     memcpy(b, r.Bytes, matra);
     return true;
   }
 
-  bool Bytes(bool val, uint8_t *b, size_t *sz){
+  bool Bytes(bool val, uint8_t *b, size_t *sz) {
     byte v = Parichay(val);
     Roop r;
     byte matra = Matra(v);
@@ -508,12 +507,12 @@ class Vastu_t {
     }
     *sz = matra; // Get the Matra
     r.U8 = val ? 1 : 0;
-    // Copy Data    
+    // Copy Data
     memcpy(b, r.Bytes, matra);
     return true;
   }
 
-  bool Bytes(int64_t val, uint8_t *b, size_t *sz){
+  bool Bytes(int64_t val, uint8_t *b, size_t *sz) {
     byte v = Parichay(val);
     Roop r;
     byte matra = Matra(v);
@@ -522,51 +521,44 @@ class Vastu_t {
     }
     *sz = matra; // Get the Matra
     r.I64 = val;
-    // Copy Data    
+    // Copy Data
     memcpy(b, r.Bytes, matra);
     return true;
   }
 
-  bool Bytes(ID val, uint8_t *b, size_t *sz){    
+  bool Bytes(ID val, uint8_t *b, size_t *sz) { return Bytes(val.val, b, sz); }
+
+  bool Bytes(Proto val, uint8_t *b, size_t *sz) {
     return Bytes(val.val, b, sz);
   }
 
-  bool Bytes(Proto val, uint8_t *b, size_t *sz){    
-    return Bytes(val.val, b, sz);
-  }
-  
-  bool Bytes(CMD val, uint8_t *b, size_t *sz){    
+  bool Bytes(CMD val, uint8_t *b, size_t *sz) { return Bytes(val.val, b, sz); }
+
+  bool Bytes(ADDR val, uint8_t *b, size_t *sz) { return Bytes(val.val, b, sz); }
+
+  bool Bytes(CRC32 val, uint8_t *b, size_t *sz) {
     return Bytes(val.val, b, sz);
   }
 
-  bool Bytes(ADDR val, uint8_t *b, size_t *sz){    
+  bool Bytes(Sampurna val, uint8_t *b, size_t *sz) {
     return Bytes(val.val, b, sz);
   }
 
-  bool Bytes(CRC32 val, uint8_t *b, size_t *sz){    
+  bool Bytes(Array val, uint8_t *b, size_t *sz) {
     return Bytes(val.val, b, sz);
   }
 
-  bool Bytes(Sampurna val, uint8_t *b, size_t *sz){    
+  bool Bytes(Tuples val, uint8_t *b, size_t *sz) {
     return Bytes(val.val, b, sz);
   }
 
-  bool Bytes(Array val, uint8_t *b, size_t *sz){    
+  bool Bytes(ChunkTotal val, uint8_t *b, size_t *sz) {
     return Bytes(val.val, b, sz);
   }
 
-  bool Bytes(Tuples val, uint8_t *b, size_t *sz){    
+  bool Bytes(ChunkIndex val, uint8_t *b, size_t *sz) {
     return Bytes(val.val, b, sz);
   }
-
-  bool Bytes(ChunkTotal val, uint8_t *b, size_t *sz){    
-    return Bytes(val.val, b, sz);
-  }
-
-  bool Bytes(ChunkIndex val, uint8_t *b, size_t *sz){    
-    return Bytes(val.val, b, sz);
-  }
-
 };
 static Vastu_t Vastu;
 

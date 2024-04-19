@@ -36,7 +36,7 @@
 #define _BOSEJIS_AMV_H_
 
 #include "Ankitak.h"
-#include "Vastu.h"
 #include "Utils.h"
+#include "Vastu.h"
 
 #endif /* _BOSEJIS_AMV_H_ */

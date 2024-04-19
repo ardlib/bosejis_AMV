@@ -44,7 +44,6 @@
 //       *----------------------------- = Option Prakriya(1)
 //           *------------------------- = Option 2 Byte Checksum(1)
 
-
 #include <Arduino.h>
 
 // Request अंकितक 0b0000_0000
@@ -69,17 +68,16 @@
 
 // _Ankitak_t is the C++ representation of अंकितक
 class _Ankitak_t {
-  public:
-
+public:
   // WithPrakriya enables Additional functions for अंकितक
-  byte WithPrakriya(byte a) { 
-    a = (a | Ankitak_Prakriya); 
+  byte WithPrakriya(byte a) {
+    a = (a | Ankitak_Prakriya);
     return a;
   };
 
   // WithChecksum enables addition of Checksum for अंकितक
-  byte WithChecksum(byte a) { 
-    a = (a | Ankitak_Checksum); 
+  byte WithChecksum(byte a) {
+    a = (a | Ankitak_Checksum);
     return a;
   };
 
@@ -94,19 +92,19 @@ class _Ankitak_t {
   };
 
   // Request converts the अंकितक to indicate request पुलिंदा
-  byte Request(byte a) { 
-    a = ((a & (~_Ankitak_maskReqRes)) | Ankitak_Request); 
+  byte Request(byte a) {
+    a = ((a & (~_Ankitak_maskReqRes)) | Ankitak_Request);
     return a;
   };
 
   // Response converts the अंकितक to indicate response पुलिंदा
-  byte Response(byte a) { 
-    a = ((a & (~_Ankitak_maskReqRes)) | Ankitak_Response); 
+  byte Response(byte a) {
+    a = ((a & (~_Ankitak_maskReqRes)) | Ankitak_Response);
     return a;
   };
 
   // IsRequest tells if the अंकितक is for a request पुलिंदा
-  bool IsRequest(byte a) { 
+  bool IsRequest(byte a) {
     return (a & _Ankitak_maskReqRes) == Ankitak_Request;
   };
 
@@ -114,7 +112,6 @@ class _Ankitak_t {
   bool IsResponse(byte a) {
     return (a & _Ankitak_maskReqRes) == Ankitak_Response;
   };
-
 };
 
 static _Ankitak_t Ankitak;
