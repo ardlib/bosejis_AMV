@@ -366,12 +366,14 @@ class Vastu_t {
   byte Parichay(ChunkIndex b) { return Vastu_ChunkIndex; }
 
   // Bytes Helps to convert Vastu into its uint8_t[] representation.
+  // The `sz` here serves to indicate size initially and return the
+  // matra.
   
-  bool Bytes(uint16_t val, uint8_t *b, size_t max, size_t *sz){
+  bool Bytes(uint16_t val, uint8_t *b, size_t *sz){
     byte v = Parichay(val);
     Roop r;
     byte matra = Matra(v);
-    if (max < matra) {
+    if (*sz < matra) {
       return false;
     }
     *sz = matra; // Get the Matra
@@ -381,11 +383,11 @@ class Vastu_t {
     return true;
   }
 
-  bool Bytes(uint32_t val, uint8_t *b, size_t max, size_t *sz){
+  bool Bytes(uint32_t val, uint8_t *b, size_t *sz){
     byte v = Parichay(val);
     Roop r;
     byte matra = Matra(v);
-    if (max < matra) {
+    if (*sz < matra) {
       return false;
     }
     *sz = matra; // Get the Matra
@@ -395,11 +397,11 @@ class Vastu_t {
     return true;
   }
 
-  bool Bytes(uint64_t val, uint8_t *b, size_t max, size_t *sz){
+  bool Bytes(uint64_t val, uint8_t *b, size_t *sz){
     byte v = Parichay(val);
     Roop r;
     byte matra = Matra(v);
-    if (max < matra) {
+    if (*sz < matra) {
       return false;
     }
     *sz = matra; // Get the Matra
@@ -409,11 +411,11 @@ class Vastu_t {
     return true;
   }
 
-  bool Bytes(float val, uint8_t *b, size_t max, size_t *sz){
+  bool Bytes(float val, uint8_t *b, size_t *sz){
     byte v = Parichay(val);
     Roop r;
     byte matra = Matra(v);
-    if (max < matra) {
+    if (*sz < matra) {
       return false;
     }
     *sz = matra; // Get the Matra
@@ -423,11 +425,11 @@ class Vastu_t {
     return true;
   }
 
-  bool Bytes(double val, uint8_t *b, size_t max, size_t *sz){
+  bool Bytes(double val, uint8_t *b, size_t *sz){
     byte v = Parichay(val);
     Roop r;
     byte matra = Matra(v);
-    if (max < matra) {
+    if (*sz < matra) {
       return false;
     }
     *sz = matra; // Get the Matra
@@ -437,11 +439,11 @@ class Vastu_t {
     return true;
   }
 
-  bool Bytes(uint8_t val, uint8_t *b, size_t max, size_t *sz){
+  bool Bytes(uint8_t val, uint8_t *b, size_t *sz){
     byte v = Parichay(val);
     Roop r;
     byte matra = Matra(v);
-    if (max < matra) {
+    if (*sz < matra) {
       return false;
     }
     *sz = matra; // Get the Matra
@@ -451,11 +453,11 @@ class Vastu_t {
     return true;
   }
 
-  bool Bytes(int8_t val, uint8_t *b, size_t max, size_t *sz){
+  bool Bytes(int8_t val, uint8_t *b, size_t *sz){
     byte v = Parichay(val);
     Roop r;
     byte matra = Matra(v);
-    if (max < matra) {
+    if (*sz < matra) {
       return false;
     }
     *sz = matra; // Get the Matra
@@ -465,15 +467,15 @@ class Vastu_t {
     return true;
   }
 
-  bool Bytes(char val, uint8_t *b, size_t max, size_t *sz) {
-    return Bytes(static_cast<int8_t>(val), b, max, sz);
+  bool Bytes(char val, uint8_t *b, size_t *sz) {
+    return Bytes(static_cast<int8_t>(val), b, sz);
   }
 
-  bool Bytes(int16_t val, uint8_t *b, size_t max, size_t *sz){
+  bool Bytes(int16_t val, uint8_t *b, size_t *sz){
     byte v = Parichay(val);
     Roop r;
     byte matra = Matra(v);
-    if (max < matra) {
+    if (*sz < matra) {
       return false;
     }
     *sz = matra; // Get the Matra
@@ -483,11 +485,11 @@ class Vastu_t {
     return true;
   }
 
-  bool Bytes(int32_t val, uint8_t *b, size_t max, size_t *sz){
+  bool Bytes(int32_t val, uint8_t *b, size_t *sz){
     byte v = Parichay(val);
     Roop r;
     byte matra = Matra(v);
-    if (max < matra) {
+    if (*sz < matra) {
       return false;
     }
     *sz = matra; // Get the Matra
@@ -497,11 +499,11 @@ class Vastu_t {
     return true;
   }
 
-  bool Bytes(bool val, uint8_t *b, size_t max, size_t *sz){
+  bool Bytes(bool val, uint8_t *b, size_t *sz){
     byte v = Parichay(val);
     Roop r;
     byte matra = Matra(v);
-    if (max < matra) {
+    if (*sz < matra) {
       return false;
     }
     *sz = matra; // Get the Matra
@@ -511,11 +513,11 @@ class Vastu_t {
     return true;
   }
 
-  bool Bytes(int64_t val, uint8_t *b, size_t max, size_t *sz){
+  bool Bytes(int64_t val, uint8_t *b, size_t *sz){
     byte v = Parichay(val);
     Roop r;
     byte matra = Matra(v);
-    if (max < matra) {
+    if (*sz < matra) {
       return false;
     }
     *sz = matra; // Get the Matra
@@ -525,44 +527,44 @@ class Vastu_t {
     return true;
   }
 
-  bool Bytes(ID val, uint8_t *b, size_t max, size_t *sz){    
-    return Bytes(val.val, b, max, sz);
+  bool Bytes(ID val, uint8_t *b, size_t *sz){    
+    return Bytes(val.val, b, sz);
   }
 
-  bool Bytes(Proto val, uint8_t *b, size_t max, size_t *sz){    
-    return Bytes(val.val, b, max, sz);
+  bool Bytes(Proto val, uint8_t *b, size_t *sz){    
+    return Bytes(val.val, b, sz);
   }
   
-  bool Bytes(CMD val, uint8_t *b, size_t max, size_t *sz){    
-    return Bytes(val.val, b, max, sz);
+  bool Bytes(CMD val, uint8_t *b, size_t *sz){    
+    return Bytes(val.val, b, sz);
   }
 
-  bool Bytes(ADDR val, uint8_t *b, size_t max, size_t *sz){    
-    return Bytes(val.val, b, max, sz);
+  bool Bytes(ADDR val, uint8_t *b, size_t *sz){    
+    return Bytes(val.val, b, sz);
   }
 
-  bool Bytes(CRC32 val, uint8_t *b, size_t max, size_t *sz){    
-    return Bytes(val.val, b, max, sz);
+  bool Bytes(CRC32 val, uint8_t *b, size_t *sz){    
+    return Bytes(val.val, b, sz);
   }
 
-  bool Bytes(Sampurna val, uint8_t *b, size_t max, size_t *sz){    
-    return Bytes(val.val, b, max, sz);
+  bool Bytes(Sampurna val, uint8_t *b, size_t *sz){    
+    return Bytes(val.val, b, sz);
   }
 
-  bool Bytes(Array val, uint8_t *b, size_t max, size_t *sz){    
-    return Bytes(val.val, b, max, sz);
+  bool Bytes(Array val, uint8_t *b, size_t *sz){    
+    return Bytes(val.val, b, sz);
   }
 
-  bool Bytes(Tuples val, uint8_t *b, size_t max, size_t *sz){    
-    return Bytes(val.val, b, max, sz);
+  bool Bytes(Tuples val, uint8_t *b, size_t *sz){    
+    return Bytes(val.val, b, sz);
   }
 
-  bool Bytes(ChunkTotal val, uint8_t *b, size_t max, size_t *sz){    
-    return Bytes(val.val, b, max, sz);
+  bool Bytes(ChunkTotal val, uint8_t *b, size_t *sz){    
+    return Bytes(val.val, b, sz);
   }
 
-  bool Bytes(ChunkIndex val, uint8_t *b, size_t max, size_t *sz){    
-    return Bytes(val.val, b, max, sz);
+  bool Bytes(ChunkIndex val, uint8_t *b, size_t *sz){    
+    return Bytes(val.val, b, sz);
   }
 
 };

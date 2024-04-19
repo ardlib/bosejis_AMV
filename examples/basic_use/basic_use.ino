@@ -74,7 +74,8 @@ void loop() {
    Serial.println(Ankitak.IsResponse(a));
    Serial.print("Has Checksum  : ");
    Serial.println(Ankitak.HasChecksum(a));
-   if (Vastu.Bytes(value1, buf, BUF_MAX, &sz)) {
+   sz = BUF_MAX;
+   if (Vastu.Bytes(value1, buf, &sz)) {
       Serial.println("Vastu - Bytes usage1");
       Serial.print("Original Value: 0x");
       Serial.println(value1, HEX);
@@ -88,7 +89,8 @@ void loop() {
       Serial.println();
    }
    name.val = 0x6789EF12;
-   if (Vastu.Bytes(name, buf, BUF_MAX, &sz)) {
+   sz = BUF_MAX;
+   if (Vastu.Bytes(name, buf, &sz)) {
       Serial.println("Vastu - Bytes usage2");
       Serial.print("Original Value: 0x");
       Serial.println(name.val, HEX);
