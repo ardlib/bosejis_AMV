@@ -337,32 +337,110 @@ public:
 
   // Parichay helps to Determine the Vastu Type
 
-  byte Parichay(byte *b) { return Vastu_Bytes; }
-  byte Parichay(const byte *b) { return Vastu_Bytes; }
-  byte Parichay(uint16_t b) { return Vastu_U16; }
-  byte Parichay(uint32_t b) { return Vastu_U32; }
-  byte Parichay(uint64_t b) { return Vastu_U64; }
-  byte Parichay(float b) { return Vastu_F32; }
-  byte Parichay(double b) { return Vastu_F64; }
-  byte Parichay(byte b) { return Vastu_U8; }
-  byte Parichay(char b) { return Vastu_I8; }
-  byte Parichay(int8_t b) { return Vastu_I8; }
-  byte Parichay(int16_t b) { return Vastu_I16; }
-  byte Parichay(int32_t b) { return Vastu_I32; }
-  byte Parichay(bool b) { return Vastu_Bool; }
-  byte Parichay(char *b) { return Vastu_String; }
-  byte Parichay(const char *b) { return Vastu_String; }
-  byte Parichay(int64_t b) { return Vastu_I64; }
-  byte Parichay(ID b) { return Vastu_ID; }
-  byte Parichay(Proto b) { return Vastu_Proto; }
-  byte Parichay(CMD b) { return Vastu_CMD; }
-  byte Parichay(ADDR b) { return Vastu_ADDR; }
-  byte Parichay(CRC32 b) { return Vastu_CRC32; }
-  byte Parichay(Sampurna b) { return Vastu_Sampurna; }
-  byte Parichay(Array b) { return Vastu_Array; }
-  byte Parichay(Tuples b) { return Vastu_Tuples; }
-  byte Parichay(ChunkTotal b) { return Vastu_ChunkTotal; }
-  byte Parichay(ChunkIndex b) { return Vastu_ChunkIndex; }
+  byte Parichay(byte *b) {
+    (void)b;
+    return Vastu_Bytes;
+  }
+  byte Parichay(const byte *b) {
+    (void)b;
+    return Vastu_Bytes;
+  }
+  byte Parichay(uint16_t b) {
+    (void)b;
+    return Vastu_U16;
+  }
+  byte Parichay(uint32_t b) {
+    (void)b;
+    return Vastu_U32;
+  }
+  byte Parichay(uint64_t b) {
+    (void)b;
+    return Vastu_U64;
+  }
+  byte Parichay(float b) {
+    (void)b;
+    return Vastu_F32;
+  }
+  byte Parichay(double b) {
+    (void)b;
+    return Vastu_F64;
+  }
+  byte Parichay(byte b) {
+    (void)b;
+    return Vastu_U8;
+  }
+  byte Parichay(char b) {
+    (void)b;
+    return Vastu_I8;
+  }
+  byte Parichay(int8_t b) {
+    (void)b;
+    return Vastu_I8;
+  }
+  byte Parichay(int16_t b) {
+    (void)b;
+    return Vastu_I16;
+  }
+  byte Parichay(int32_t b) {
+    (void)b;
+    return Vastu_I32;
+  }
+  byte Parichay(bool b) {
+    (void)b;
+    return Vastu_Bool;
+  }
+  byte Parichay(char *b) {
+    (void)b;
+    return Vastu_String;
+  }
+  byte Parichay(const char *b) {
+    (void)b;
+    return Vastu_String;
+  }
+  byte Parichay(int64_t b) {
+    (void)b;
+    return Vastu_I64;
+  }
+  byte Parichay(ID b) {
+    (void)b;
+    return Vastu_ID;
+  }
+  byte Parichay(Proto b) {
+    (void)b;
+    return Vastu_Proto;
+  }
+  byte Parichay(CMD b) {
+    (void)b;
+    return Vastu_CMD;
+  }
+  byte Parichay(ADDR b) {
+    (void)b;
+    return Vastu_ADDR;
+  }
+  byte Parichay(CRC32 b) {
+    (void)b;
+    return Vastu_CRC32;
+  }
+  byte Parichay(Sampurna b) {
+    (void)b;
+    return Vastu_Sampurna;
+  }
+  byte Parichay(Array b) {
+    (void)b;
+    return Vastu_Array;
+  }
+  byte Parichay(Tuples b) {
+    (void)b;
+    return Vastu_Tuples;
+  }
+  byte Parichay(ChunkTotal b) {
+    (void)b;
+    return Vastu_ChunkTotal;
+  }
+  byte Parichay(ChunkIndex b) {
+    (void)b;
+    return Vastu_ChunkIndex;
+  }
 
   // Bytes Helps to convert Vastu into its uint8_t[] representation.
   // The `sz` here serves to indicate size initially and return the
