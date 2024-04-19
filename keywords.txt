@@ -35,6 +35,7 @@ Checksum		KEYWORD2
 HexStream		KEYWORD2
 HexDecode		KEYWORD2
 CalcCRC32_CCITT	KEYWORD2
+From			KEYWORD2
 
 # Structures, Pre-Processor and Other Functions (KEYWORD3)
 

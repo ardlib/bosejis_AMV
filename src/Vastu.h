@@ -637,6 +637,177 @@ public:
   bool Bytes(ChunkIndex val, uint8_t *b, size_t *sz) {
     return Bytes(val.val, b, sz);
   }
+
+  // From helps to convert Vastu from its uint8_t[] form back to
+  // the actual data type.
+
+  bool From(uint8_t *b, size_t sz, uint16_t *val) {
+    byte v = Parichay(*val);
+    Roop r;
+    byte matra = Matra(v);
+    if (sz < matra) {
+      return false;
+    }
+    memcpy(r.Bytes, b, matra);
+    *val = r.U16;
+    return true;
+  }
+
+  bool From(uint8_t *b, size_t sz, uint32_t *val) {
+    byte v = Parichay(*val);
+    Roop r;
+    byte matra = Matra(v);
+    if (sz < matra) {
+      return false;
+    }
+    memcpy(r.Bytes, b, matra);
+    *val = r.U32;
+    return true;
+  }
+
+  bool From(uint8_t *b, size_t sz, uint64_t *val) {
+    byte v = Parichay(*val);
+    Roop r;
+    byte matra = Matra(v);
+    if (sz < matra) {
+      return false;
+    }
+    memcpy(r.Bytes, b, matra);
+    *val = r.U64;
+    return true;
+  }
+
+  bool From(uint8_t *b, size_t sz, float *val) {
+    byte v = Parichay(*val);
+    Roop r;
+    byte matra = Matra(v);
+    if (sz < matra) {
+      return false;
+    }
+    memcpy(r.Bytes, b, matra);
+    *val = r.F32;
+    return true;
+  }
+
+  bool From(uint8_t *b, size_t sz, double *val) {
+    byte v = Parichay(*val);
+    Roop r;
+    byte matra = Matra(v);
+    if (sz < matra) {
+      return false;
+    }
+    memcpy(r.Bytes, b, matra);
+    *val = r.F64;
+    return true;
+  }
+
+  bool From(uint8_t *b, size_t sz, uint8_t *val) {
+    byte v = Parichay(*val);
+    Roop r;
+    byte matra = Matra(v);
+    if (sz < matra) {
+      return false;
+    }
+    memcpy(r.Bytes, b, matra);
+    *val = r.U8;
+    return true;
+  }
+
+  bool From(uint8_t *b, size_t sz, int8_t *val) {
+    byte v = Parichay(*val);
+    Roop r;
+    byte matra = Matra(v);
+    if (sz < matra) {
+      return false;
+    }
+    memcpy(r.Bytes, b, matra);
+    *val = r.I8;
+    return true;
+  }
+
+  bool From(uint8_t *b, size_t sz, char *val) {
+    return From(b, sz, (int8_t *)(val));
+  }
+
+  bool From(uint8_t *b, size_t sz, int16_t *val) {
+    byte v = Parichay(*val);
+    Roop r;
+    byte matra = Matra(v);
+    if (sz < matra) {
+      return false;
+    }
+    memcpy(r.Bytes, b, matra);
+    *val = r.I16;
+    return true;
+  }
+
+  bool From(uint8_t *b, size_t sz, int32_t *val) {
+    byte v = Parichay(*val);
+    Roop r;
+    byte matra = Matra(v);
+    if (sz < matra) {
+      return false;
+    }
+    memcpy(r.Bytes, b, matra);
+    *val = r.I32;
+    return true;
+  }
+
+  bool From(uint8_t *b, size_t sz, bool *val) {
+    byte v = Parichay(*val);
+    Roop r;
+    byte matra = Matra(v);
+    if (sz < matra) {
+      return false;
+    }
+    memcpy(r.Bytes, b, matra);
+    *val = (r.U8 != 0) ? true : false;
+    return true;
+  }
+
+  bool From(uint8_t *b, size_t sz, int64_t *val) {
+    byte v = Parichay(*val);
+    Roop r;
+    byte matra = Matra(v);
+    if (sz < matra) {
+      return false;
+    }
+    memcpy(r.Bytes, b, matra);
+    *val = r.I64;
+    return true;
+  }
+
+  bool From(uint8_t *b, size_t sz, ID *val) { return From(b, sz, &val->val); }
+
+  bool From(uint8_t *b, size_t sz, Proto *val) {
+    return From(b, sz, &val->val);
+  }
+
+  bool From(uint8_t *b, size_t sz, CMD *val) { return From(b, sz, &val->val); }
+
+  bool From(uint8_t *b, size_t sz, CRC32 *val) {
+    return From(b, sz, &val->val);
+  }
+
+  bool From(uint8_t *b, size_t sz, Sampurna *val) {
+    return From(b, sz, &val->val);
+  }
+
+  bool From(uint8_t *b, size_t sz, Array *val) {
+    return From(b, sz, &val->val);
+  }
+
+  bool From(uint8_t *b, size_t sz, Tuples *val) {
+    return From(b, sz, &val->val);
+  }
+
+  bool From(uint8_t *b, size_t sz, ChunkTotal *val) {
+    return From(b, sz, &val->val);
+  }
+
+  bool From(uint8_t *b, size_t sz, ChunkIndex *val) {
+    return From(b, sz, &val->val);
+  }
 };
 static Vastu_t Vastu;
 
