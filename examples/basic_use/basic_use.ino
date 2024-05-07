@@ -39,9 +39,9 @@
 #include <bosejis_PString.h>
 
 // Defines
-#define SEPARATOR(X)  \
-  Serial.println(F("---------------------------")); \
-  Serial.println(X);  \
+#define SEPARATOR(X)                                                           \
+  Serial.println(F("---------------------------"));                            \
+  Serial.println(X);                                                           \
   Serial.println()
 #define STR_BUF_SIZE 100
 
@@ -180,7 +180,7 @@ void Test_Ankitak() {
 void Test_VastuBytes() {
 #define BUF_SIZE 50
   uint8_t buffer[BUF_SIZE];
-  size_t sz,sz_alt;
+  size_t sz, sz_alt;
   SEPARATOR("Vastu-Bytes usage");
   sz = BUF_SIZE;
   if (Vastu.Bytes((uint8_t)34, buffer, &sz)) {

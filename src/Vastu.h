@@ -459,7 +459,8 @@ public:
   // ToBuffer helps to convert Streams char[] and byte[] into Buffer type
 
   bool ToBuffer(uint8_t *buf, uint16_t size, Buffer *b) {
-    if (b == NULL || buf == NULL || size == 0) return false;
+    if (b == NULL || buf == NULL || size == 0)
+      return false;
     b->bytes = buf;
     b->size = size;
     b->isNullTerminated = 0;
@@ -467,7 +468,7 @@ public:
   }
 
   bool ToBuffer(const byte *buf, uint16_t size, Buffer *b) {
-    return ToBuffer((uint8_t *)buf,size,b);
+    return ToBuffer((uint8_t *)buf, size, b);
   }
 
   bool ToBuffer(char *buf, uint16_t size, Buffer *b) {
@@ -478,7 +479,7 @@ public:
   }
 
   bool ToBuffer(const char *buf, uint16_t size, Buffer *b) {
-    return ToBuffer((char *)buf,size,b);
+    return ToBuffer((char *)buf, size, b);
   }
 
   // Bytes Helps to convert Vastu into its uint8_t[] representation.
@@ -686,7 +687,7 @@ public:
 
   bool Bytes(ChunkIndex val, uint8_t *b, size_t *sz) {
     return Bytes(val.val, b, sz);
-  } 
+  }
 
   // From helps to convert Vastu from its uint8_t[] form back to
   // the actual data type.
