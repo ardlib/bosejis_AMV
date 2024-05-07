@@ -36,14 +36,31 @@
  */
 
 #include <bosejis_AMV.h>
+#include <bosejis_PString.h>
 
+// Defines
+#define SEPARATOR(X)  \
+  Serial.println(F("---------------------------")); \
+  Serial.println(X);  \
+  Serial.println()
+#define STR_BUF_SIZE 100
+
+// Functions
+void Test_Ankitak();
+void Test_VastuBytes();
+
+// Globals
+static char str_buf[STR_BUF_SIZE];
+PString str(str_buf, STR_BUF_SIZE);
+
+/*
 // Size Constants
 #define BUF_MAX 8
 #define CHARR_MAX 20
 #define VALUE2_MAX 6
 
 // Global Variables
-byte a; // To be used for Ankitak
+
 uint32_t value1 = 0x1234ABCD, rvalue1;
 size_t sz, sz2;
 uint8_t buf[BUF_MAX];
@@ -52,8 +69,10 @@ uint8_t value2[VALUE2_MAX] = {0x03, 0x04, 0xAA, 0xDB, 0x3C, 0x71};
 uint16_t checksum;
 char strm[CHARR_MAX];
 CRC32 crc;
+*/
 
 void setup() {
+  delay(1000); // Startup Delay
   Serial.begin(115200);
   while (!Serial) {
   }
@@ -61,18 +80,10 @@ void setup() {
 
 void loop() {
   delay(2000);
-  Serial.println("---------------------------");
-  Serial.println("Ankitak usage");
-  Serial.print("Response      : 0x");
-  a = Ankitak.Response(a);
-  Serial.println(a, HEX);
-  Serial.print("With Checksum : 0x");
-  a = Ankitak.WithChecksum(a);
-  Serial.println(a, HEX);
-  Serial.print("Is Response   : ");
-  Serial.println(Ankitak.IsResponse(a));
-  Serial.print("Has Checksum  : ");
-  Serial.println(Ankitak.HasChecksum(a));
+  Test_Ankitak();
+  delay(2000);
+  Test_VastuBytes();
+  /*
   sz = BUF_MAX;
   if (Vastu.Bytes(value1, buf, &sz)) {
     Serial.println("Vastu - Bytes usage1");
@@ -134,5 +145,52 @@ void loop() {
   crc.val = CalcCRC32_CCITT(value2, VALUE2_MAX);
   Serial.print("CalcCRC32_CCITT: ");
   Serial.println(crc.val, HEX);
+  Serial.println();
+  Serial.println("Buffer and ToBuffer usage");
+
+  Buffer b;
+  if (Vastu.ToBuffer(value2, VALUE2_MAX, &b)) {
+    sz = BUF_MAX;
+    if (Vastu.Bytes(b, buf, &sz)) {
+      Serial.print("BufferValue: ");
+      sz2 = CHARR_MAX;
+      HexStream(buf, sz, strm, &sz2);
+      Serial.println(strm);
+    }
+  }
+  */
+}
+
+void Test_Ankitak() {
+  byte a; // To be used for Ankitak
+  SEPARATOR("Ankitak usage");
+  Serial.print("Response      : 0x");
+  a = Ankitak.Response(a);
+  Serial.println(a, HEX);
+  Serial.print("With Checksum : 0x");
+  a = Ankitak.WithChecksum(a);
+  Serial.println(a, HEX);
+  Serial.print("Is Response   : ");
+  Serial.println(Ankitak.IsResponse(a));
+  Serial.print("Has Checksum  : ");
+  Serial.println(Ankitak.HasChecksum(a));
+  Serial.println();
+}
+
+void Test_VastuBytes() {
+#define BUF_SIZE 50
+  uint8_t buffer[BUF_SIZE];
+  size_t sz,sz_alt;
+  SEPARATOR("Vastu-Bytes usage");
+  sz = BUF_SIZE;
+  if (Vastu.Bytes((uint8_t)34, buffer, &sz)) {
+    str.begin();
+    str.print(F("Converting uint8_t value "));
+    str.print(34);
+    str.print(F(" Into Vastu-Bytes : {"));
+    str.HexArray(buffer, sz);
+    str.print(F(" }"));
+    Serial.println(str);
+  }
   Serial.println();
 }

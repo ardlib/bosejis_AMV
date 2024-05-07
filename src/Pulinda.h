@@ -32,12 +32,12 @@
  *  You should have received a copy of the GNU General Public License
  *  along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-#ifndef _BOSEJIS_AMV_H_
-#define _BOSEJIS_AMV_H_
+#ifndef _PULINDA_H_
+#define _PULINDA_H_
 
 #include "Ankitak.h"
-#include "Pulinda.h"
 #include "Utils.h"
 #include "Vastu.h"
+#include <Arduino.h>
 
-#endif /* _BOSEJIS_AMV_H_ */
+#endif /* _PULINDA_H_ */

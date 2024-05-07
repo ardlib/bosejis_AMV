@@ -175,6 +175,20 @@
 // QWORD or 64-bit is Special Identifier for मात्रा in 8 Byte
 #define QWORD 8
 
+// Buffer Compact type that describes both char[] and byte[] alike
+typedef struct Buffer_t {
+  uint8_t *bytes;
+  uint16_t size;
+  uint8_t isNullTerminated;
+  uint8_t _Reserved;
+  byte Vastu() {
+    if (isNullTerminated != 0) {
+      return Vastu_String;
+    }
+    return Vastu_Bytes;
+  }
+} Buffer;
+
 // Roop is the Multi Define wrapper to convert into Byte Array.
 typedef union _Roop_t {
   uint16_t U16;
@@ -442,9 +456,49 @@ public:
     return Vastu_ChunkIndex;
   }
 
+  // ToBuffer helps to convert Streams char[] and byte[] into Buffer type
+
+  bool ToBuffer(uint8_t *buf, uint16_t size, Buffer *b) {
+    if (b == NULL || buf == NULL || size == 0) return false;
+    b->bytes = buf;
+    b->size = size;
+    b->isNullTerminated = 0;
+    return true;
+  }
+
+  bool ToBuffer(const byte *buf, uint16_t size, Buffer *b) {
+    return ToBuffer((uint8_t *)buf,size,b);
+  }
+
+  bool ToBuffer(char *buf, uint16_t size, Buffer *b) {
+    b->bytes = (uint8_t *)buf;
+    b->size = size;
+    b->isNullTerminated = 1;
+    return true;
+  }
+
+  bool ToBuffer(const char *buf, uint16_t size, Buffer *b) {
+    return ToBuffer((char *)buf,size,b);
+  }
+
   // Bytes Helps to convert Vastu into its uint8_t[] representation.
   // The `sz` here serves to indicate size initially and return the
   // matra.
+
+  bool Bytes(Buffer val, uint8_t *b, size_t *sz) {
+    byte v = val.Vastu();
+    Roop r;
+    byte matra = Matra(v);
+    if (*sz < (matra + val.size)) {
+      return false;
+    }
+    *sz = (matra + val.size);
+    r.U16 = val.size;
+    // Copy Data
+    memcpy(b, r.Bytes, matra);
+    memcpy(&b[matra], val.bytes, val.size);
+    return true;
+  }
 
   bool Bytes(uint16_t val, uint8_t *b, size_t *sz) {
     byte v = Parichay(val);
@@ -517,16 +571,12 @@ public:
   }
 
   bool Bytes(uint8_t val, uint8_t *b, size_t *sz) {
-    byte v = Parichay(val);
-    Roop r;
-    byte matra = Matra(v);
-    if (*sz < matra) {
+    if (b == NULL || sz == NULL)
       return false;
-    }
-    *sz = matra; // Get the Matra
-    r.U8 = val;
-    // Copy Data
-    memcpy(b, r.Bytes, matra);
+    if (*sz < sizeof(uint8_t))
+      return false;
+    b[0] = val;
+    *sz = 1;
     return true;
   }
 
@@ -636,7 +686,7 @@ public:
 
   bool Bytes(ChunkIndex val, uint8_t *b, size_t *sz) {
     return Bytes(val.val, b, sz);
-  }
+  } 
 
   // From helps to convert Vastu from its uint8_t[] form back to
   // the actual data type.
@@ -766,14 +816,21 @@ public:
   }
 
   bool From(uint8_t *b, size_t sz, int64_t *val) {
-    byte v = Parichay(*val);
-    Roop r;
-    byte matra = Matra(v);
-    if (sz < matra) {
+    uint64_t v = 0;
+    if (b == NULL || sz == 0 || val == NULL)
+      return false;
+    if (sz < sizeof(int64_t)) {
       return false;
     }
-    memcpy(r.Bytes, b, matra);
-    *val = r.I64;
+    v += ((uint64_t)b[7]) << (8 * 7);
+    v += ((uint64_t)b[6]) << (8 * 6);
+    v += ((uint64_t)b[5]) << (8 * 5);
+    v += ((uint64_t)b[4]) << (8 * 4);
+    v += ((uint64_t)b[3]) << (8 * 3);
+    v += ((uint64_t)b[2]) << (8 * 2);
+    v += ((uint64_t)b[1]) << (8 * 1);
+    v += ((uint64_t)b[0]);
+    *val = (int64_t)val;
     return true;
   }
 
@@ -807,6 +864,34 @@ public:
 
   bool From(uint8_t *b, size_t sz, ChunkIndex *val) {
     return From(b, sz, &val->val);
+  }
+
+  bool From(uint8_t *b, size_t sz, Buffer *val) {
+    uint16_t pack_size;
+    size_t total;
+    if (val == NULL || b == NULL || sz == 0)
+      return false;
+    // First 2 bytes are size
+    pack_size = (((uint16_t)b[1]) << 8) | ((uint16_t)b[0]);
+    total = (sizeof(uint16_t) + pack_size);
+    if (sz < total || val->size < total) {
+      return false;
+    }
+    memcpy(val->bytes, &b[2], total);
+    val->size = pack_size;
+    return true;
+  }
+
+  // From Buffer Allows to convert from Buffer to uint8_t[] or char[]
+
+  bool FromBuffer(Buffer *b, uint8_t *buf, uint16_t *sz) {
+    if (b == NULL || buf == NULL || sz == NULL)
+      return false;
+    if (*sz < b->size) {
+      return false;
+    }
+    memcpy(buf, b->bytes, b->size);
+    return true;
   }
 };
 static Vastu_t Vastu;
