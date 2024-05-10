@@ -43,7 +43,7 @@
   Serial.println(F("---------------------------"));                            \
   Serial.println(X);                                                           \
   Serial.println()
-#define STR_BUF_SIZE 100
+#define STR_BUF_SIZE 200
 
 // Functions
 void Test_Ankitak();
@@ -178,13 +178,45 @@ void Test_Ankitak() {
 }
 
 void Test_VastuBytes() {
-#define BUF_SIZE 50
+#define BUF_SIZE 100
   uint8_t buffer[BUF_SIZE];
   size_t sz, sz_alt;
+  Buffer b;
+  char *data = "Hari Aum!";
   SEPARATOR("Vastu-Bytes usage");
+
   sz = BUF_SIZE;
-  if (Vastu.Bytes((uint8_t)34, buffer, &sz)) {
+  sz_alt = strlen(data);
+  str.begin();
+  if (Vastu.ToBuffer(data, sz_alt, &b)) {
+    str.print(F("New Buffer with isNullTerminated = "));
+    str.print(b.isNullTerminated);
+    Serial.println(str);
+    Serial.print(F("Original String       :\n "));
+    Serial.println(data);
     str.begin();
+    str.print(F("In Hex                   :\n {"));
+    str.HexArray(data, sz_alt);
+    str.print(F(" }"));
+    Serial.println(str);
+    Serial.print(F("String Size (in bytes): "));
+    Serial.println(sz_alt);
+    Serial.println();
+    str.begin();
+    sz = BUF_SIZE;
+    if (Vastu.Bytes(b, buffer, &sz)) {
+      str.print(F("Converting the Buffer "));
+      str.print(F("first 2bytes are size) :\n {"));
+      str.HexArray(buffer, sz);
+      str.print(F(" }"));
+      Serial.println(str);
+    }
+  }
+  Serial.println();
+
+  sz = BUF_SIZE;
+  str.begin();
+  if (Vastu.Bytes((uint8_t)34, buffer, &sz)) {
     str.print(F("Converting uint8_t value "));
     str.print(34);
     str.print(F(" Into Vastu-Bytes : {"));

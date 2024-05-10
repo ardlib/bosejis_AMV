@@ -487,17 +487,14 @@ public:
   // matra.
 
   bool Bytes(Buffer val, uint8_t *b, size_t *sz) {
-    byte v = val.Vastu();
-    Roop r;
-    byte matra = Matra(v);
-    if (*sz < (matra + val.size)) {
+    if (*sz < (sizeof(uint16_t) + val.size)) {
       return false;
     }
-    *sz = (matra + val.size);
-    r.U16 = val.size;
+    *sz = val.size + sizeof(uint16_t);
     // Copy Data
-    memcpy(b, r.Bytes, matra);
-    memcpy(&b[matra], val.bytes, val.size);
+    b[0] = (uint8_t)(val.size & 0xFFU);
+    b[1] = (uint8_t)((val.size >> 8) & 0xFFU);
+    memcpy(&b[2], val.bytes, val.size);
     return true;
   }
 
