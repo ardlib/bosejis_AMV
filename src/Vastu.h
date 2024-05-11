@@ -487,108 +487,100 @@ public:
   // matra.
 
   bool Bytes(Buffer val, uint8_t *b, size_t *sz) {
-    if (*sz < (sizeof(uint16_t) + val.size)) {
+    size_t val_sz = sizeof(val.size);
+    if (b == NULL || sz == NULL)
+      return false;
+    if (*sz < (val_sz + val.size)) {
       return false;
     }
-    *sz = val.size + sizeof(uint16_t);
+    *sz = val.size + val_sz;
     // Copy Data
-    b[0] = (uint8_t)(val.size & 0xFFU);
-    b[1] = (uint8_t)((val.size >> 8) & 0xFFU);
-    memcpy(&b[2], val.bytes, val.size);
+    memcpy(b, &val.size, val_sz);
+    memcpy(&b[val_sz], val.bytes, val.size);
     return true;
   }
 
   bool Bytes(uint16_t val, uint8_t *b, size_t *sz) {
-    byte v = Parichay(val);
-    Roop r;
-    byte matra = Matra(v);
-    if (*sz < matra) {
+    if (b == NULL || sz == NULL)
+      return false;
+    if (*sz < sizeof(val)) {
       return false;
     }
-    *sz = matra; // Get the Matra
-    r.U16 = val;
+    *sz = sizeof(val); // Get the Matra
     // Copy Data
-    memcpy(b, r.Bytes, matra);
+    memcpy(b, &val, *sz);
     return true;
   }
 
   bool Bytes(uint32_t val, uint8_t *b, size_t *sz) {
-    byte v = Parichay(val);
-    Roop r;
-    byte matra = Matra(v);
-    if (*sz < matra) {
+    if (b == NULL || sz == NULL)
+      return false;
+    if (*sz < sizeof(val)) {
       return false;
     }
-    *sz = matra; // Get the Matra
-    r.U32 = val;
+    *sz = sizeof(val); // Get the Matra
     // Copy Data
-    memcpy(b, r.Bytes, matra);
+    memcpy(b, &val, *sz);
     return true;
   }
 
   bool Bytes(uint64_t val, uint8_t *b, size_t *sz) {
-    byte v = Parichay(val);
-    Roop r;
-    byte matra = Matra(v);
-    if (*sz < matra) {
+    if (b == NULL || sz == NULL)
+      return false;
+    if (*sz < sizeof(val)) {
       return false;
     }
-    *sz = matra; // Get the Matra
-    r.U64 = val;
+    *sz = sizeof(val); // Get the Matra
     // Copy Data
-    memcpy(b, r.Bytes, matra);
+    memcpy(b, &val, *sz);
     return true;
   }
 
   bool Bytes(float val, uint8_t *b, size_t *sz) {
-    byte v = Parichay(val);
-    Roop r;
-    byte matra = Matra(v);
-    if (*sz < matra) {
+    if (b == NULL || sz == NULL)
+      return false;
+    if (*sz < sizeof(val)) {
       return false;
     }
-    *sz = matra; // Get the Matra
-    r.F32 = val;
+    *sz = sizeof(val); // Get the Matra
     // Copy Data
-    memcpy(b, r.Bytes, matra);
+    memcpy(b, &val, *sz);
     return true;
   }
 
   bool Bytes(double val, uint8_t *b, size_t *sz) {
-    byte v = Parichay(val);
-    Roop r;
-    byte matra = Matra(v);
-    if (*sz < matra) {
+    if (b == NULL || sz == NULL)
+      return false;
+    if (*sz < sizeof(val)) {
       return false;
     }
-    *sz = matra; // Get the Matra
-    r.F64 = val;
+    *sz = sizeof(val); // Get the Matra
     // Copy Data
-    memcpy(b, r.Bytes, matra);
+    memcpy(b, &val, *sz);
     return true;
   }
 
   bool Bytes(uint8_t val, uint8_t *b, size_t *sz) {
     if (b == NULL || sz == NULL)
       return false;
-    if (*sz < sizeof(uint8_t))
+    if (*sz < sizeof(val)) {
       return false;
-    b[0] = val;
-    *sz = 1;
+    }
+    *sz = sizeof(val); // Get the Matra
+    // Copy Data
+    memcpy(b, &val, *sz);
     return true;
   }
 
   bool Bytes(int8_t val, uint8_t *b, size_t *sz) {
-    byte v = Parichay(val);
-    Roop r;
-    byte matra = Matra(v);
-    if (*sz < matra) {
+    if (b == NULL || sz == NULL)
+      return false;
+    if (*sz < sizeof(val)) {
       return false;
     }
-    *sz = matra; // Get the Matra
-    r.I8 = val;
+    *sz = sizeof(val); // Get the Matra
     // Copy Data
-    memcpy(b, r.Bytes, matra);
+    memcpy(b, &val, *sz);
     return true;
   }
 
@@ -597,58 +589,50 @@ public:
   }
 
   bool Bytes(int16_t val, uint8_t *b, size_t *sz) {
-    byte v = Parichay(val);
-    Roop r;
-    byte matra = Matra(v);
-    if (*sz < matra) {
+    if (b == NULL || sz == NULL)
+      return false;
+    if (*sz < sizeof(val)) {
       return false;
     }
-    *sz = matra; // Get the Matra
-    r.I16 = val;
+    *sz = sizeof(val); // Get the Matra
     // Copy Data
-    memcpy(b, r.Bytes, matra);
+    memcpy(b, &val, *sz);
     return true;
   }
 
   bool Bytes(int32_t val, uint8_t *b, size_t *sz) {
-    byte v = Parichay(val);
-    Roop r;
-    byte matra = Matra(v);
-    if (*sz < matra) {
+    if (b == NULL || sz == NULL)
+      return false;
+    if (*sz < sizeof(val)) {
       return false;
     }
-    *sz = matra; // Get the Matra
-    r.I32 = val;
+    *sz = sizeof(val); // Get the Matra
     // Copy Data
-    memcpy(b, r.Bytes, matra);
+    memcpy(b, &val, *sz);
     return true;
   }
 
   bool Bytes(bool val, uint8_t *b, size_t *sz) {
-    byte v = Parichay(val);
-    Roop r;
-    byte matra = Matra(v);
-    if (*sz < matra) {
+    if (b == NULL || sz == NULL)
+      return false;
+    if (*sz < sizeof(val)) {
       return false;
     }
-    *sz = matra; // Get the Matra
-    r.U8 = val ? 1 : 0;
+    *sz = sizeof(val); // Get the Matra
     // Copy Data
-    memcpy(b, r.Bytes, matra);
+    memcpy(b, &val, *sz);
     return true;
   }
 
   bool Bytes(int64_t val, uint8_t *b, size_t *sz) {
-    byte v = Parichay(val);
-    Roop r;
-    byte matra = Matra(v);
-    if (*sz < matra) {
+    if (b == NULL || sz == NULL)
+      return false;
+    if (*sz < sizeof(val)) {
       return false;
     }
-    *sz = matra; // Get the Matra
-    r.I64 = val;
+    *sz = sizeof(val); // Get the Matra
     // Copy Data
-    memcpy(b, r.Bytes, matra);
+    memcpy(b, &val, *sz);
     return true;
   }
 

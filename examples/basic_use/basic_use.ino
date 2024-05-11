@@ -177,6 +177,38 @@ void Test_Ankitak() {
   Serial.println();
 }
 
+#define ARRAY_PRINT(X, Y, Z, SZ)                                               \
+  Serial.print(F(X));                                                          \
+  Serial.print(F("(0x"));                                                      \
+  Serial.print(Y, HEX);                                                        \
+  Serial.print(F(") = {"));                                                    \
+  str.begin();                                                                 \
+  str.HexArray(Z, SZ);                                                         \
+  str.print(F(" }"));                                                          \
+  Serial.println(str);
+
+#define ARRAY_PRINT2(X, Y, Z, SZ)                                              \
+  Serial.print(F(X));                                                          \
+  Serial.print(F("(0x"));                                                      \
+  Serial.print(Y, HEX);                                                        \
+  Serial.print(F(") = "));                                                     \
+  Serial.print(Y);                                                             \
+  Serial.print(F(" = {"));                                                     \
+  str.begin();                                                                 \
+  str.HexArray(Z, SZ);                                                         \
+  str.print(F(" }"));                                                          \
+  Serial.println(str);
+
+#define ARRAY_PRINT3(X, Y, Z, SZ, K)                                           \
+  Serial.print(F(X));                                                          \
+  Serial.print(F("("));                                                        \
+  Serial.print(Y, K);                                                          \
+  Serial.print(F(") = {"));                                                    \
+  str.begin();                                                                 \
+  str.HexArray(Z, SZ);                                                         \
+  str.print(F(" }"));                                                          \
+  Serial.println(str);
+
 void Test_VastuBytes() {
 #define BUF_SIZE 100
   uint8_t buffer[BUF_SIZE];
@@ -215,14 +247,76 @@ void Test_VastuBytes() {
   Serial.println();
 
   sz = BUF_SIZE;
-  str.begin();
-  if (Vastu.Bytes((uint8_t)34, buffer, &sz)) {
-    str.print(F("Converting uint8_t value "));
-    str.print(34);
-    str.print(F(" Into Vastu-Bytes : {"));
-    str.HexArray(buffer, sz);
-    str.print(F(" }"));
-    Serial.println(str);
+  if (Vastu.Bytes((uint16_t)0x1234, buffer, &sz)) {
+    ARRAY_PRINT(" uint16_t", 0x1234, buffer, sz);
+  }
+  Serial.println();
+
+  sz = BUF_SIZE;
+  if (Vastu.Bytes((uint32_t)0x12345678, buffer, &sz)) {
+    ARRAY_PRINT(" uint32_t", 0x12345678, buffer, sz);
+  }
+  Serial.println();
+
+  sz = BUF_SIZE;
+  if (Vastu.Bytes((uint64_t)0x1234567890123456, buffer, &sz)) {
+    ARRAY_PRINT(" uint64_t", 0x1234567890123456, buffer, sz);
+  }
+  Serial.println();
+
+  sz = BUF_SIZE;
+  if (Vastu.Bytes((float)3.14159, buffer, &sz)) {
+    ARRAY_PRINT3(" float", 3.14159, buffer, sz, 7);
+  }
+  Serial.println();
+
+  sz = BUF_SIZE;
+  if (Vastu.Bytes((double)3.14159265358979, buffer, &sz)) {
+    ARRAY_PRINT3(" double", 3.14159265358979, buffer, sz, 14);
+  }
+  Serial.println();
+
+  sz = BUF_SIZE;
+  if (Vastu.Bytes((uint8_t)0x12, buffer, &sz)) {
+    ARRAY_PRINT(" uint8_t", 0x12, buffer, sz);
+  }
+  Serial.println();
+
+  sz = BUF_SIZE;
+  if (Vastu.Bytes(' ', buffer, &sz)) {
+    ARRAY_PRINT(" char", (uint8_t)' ', buffer, sz);
+  }
+  Serial.println();
+
+  sz = BUF_SIZE;
+  if (Vastu.Bytes((int16_t)-1234, buffer, &sz)) {
+    ARRAY_PRINT2(" int16_t", -1234, buffer, sz);
+  }
+  Serial.println();
+
+  sz = BUF_SIZE;
+  if (Vastu.Bytes((int32_t)-12345678, buffer, &sz)) {
+    ARRAY_PRINT2(" int32_t", -12345678, buffer, sz);
+  }
+  Serial.println();
+
+  sz = BUF_SIZE;
+  if (Vastu.Bytes(true, buffer, &sz)) {
+    ARRAY_PRINT(" bool", (uint8_t) true, buffer, sz);
+  }
+  Serial.println();
+
+  sz = BUF_SIZE;
+  if (Vastu.Bytes((int64_t)-1234567890123456, buffer, &sz)) {
+    ARRAY_PRINT2(" int64_t", -12345678, buffer, sz);
+  }
+  Serial.println();
+
+  sz = BUF_SIZE;
+  ID id;
+  id.val = 0x12345678;
+  if (Vastu.Bytes(id, buffer, &sz)) {
+    ARRAY_PRINT(" ID", id.val, buffer, sz);
   }
   Serial.println();
 }
