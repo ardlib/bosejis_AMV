@@ -177,34 +177,34 @@ void Test_Ankitak() {
   Serial.println();
 }
 
-#define ARRAY_PRINT(X, Y, Z, SZ)                                               \
-  Serial.print(F(X));                                                          \
-  Serial.print(F("(0x"));                                                      \
-  Serial.print(Y, HEX);                                                        \
-  Serial.print(F(") = {"));                                                    \
-  str.begin();                                                                 \
+#define ARRAY_PRINT(X, Y, Z, SZ)                                             \
+  str.begin();\
+  str.print(F(X));                                                          \
+  str.print(F("(0x"));                                                      \
+  str.print(Y, HEX);                                                        \
+  str.print(F(") = {"));                                                    \
   str.HexArray(Z, SZ);                                                         \
   str.print(F(" }"));                                                          \
   Serial.println(str);
 
 #define ARRAY_PRINT2(X, Y, Z, SZ)                                              \
-  Serial.print(F(X));                                                          \
-  Serial.print(F("(0x"));                                                      \
-  Serial.print(Y, HEX);                                                        \
-  Serial.print(F(") = "));                                                     \
-  Serial.print(Y);                                                             \
-  Serial.print(F(" = {"));                                                     \
   str.begin();                                                                 \
+  str.print(F(X));                                                          \
+  str.print(F("(0x"));                                                      \
+  str.print(Y, HEX);                                                        \
+  str.print(F(") = "));                                                     \
+  str.print(Y);                                                             \
+  str.print(F(" = {"));                                                     \
   str.HexArray(Z, SZ);                                                         \
   str.print(F(" }"));                                                          \
   Serial.println(str);
 
 #define ARRAY_PRINT3(X, Y, Z, SZ, K)                                           \
-  Serial.print(F(X));                                                          \
-  Serial.print(F("("));                                                        \
-  Serial.print(Y, K);                                                          \
-  Serial.print(F(") = {"));                                                    \
   str.begin();                                                                 \
+  str.print(F(X));                                                          \
+  str.print(F("("));                                                        \
+  str.print(Y, K);                                                          \
+  str.print(F(") = {"));                                                    \
   str.HexArray(Z, SZ);                                                         \
   str.print(F(" }"));                                                          \
   Serial.println(str);
@@ -260,7 +260,11 @@ void Test_VastuBytes() {
 
   sz = BUF_SIZE;
   if (Vastu.Bytes((uint64_t)0x1234567890123456, buffer, &sz)) {
-    ARRAY_PRINT(" uint64_t", 0x1234567890123456, buffer, sz);
+      str.begin();
+      str.print(F(" uint64_t(0x1234567890123456) = {"));
+      str.HexArray(buffer, sz);
+      str.print(F(" }"));
+      Serial.println(str);
   }
   Serial.println();
 
@@ -308,7 +312,11 @@ void Test_VastuBytes() {
 
   sz = BUF_SIZE;
   if (Vastu.Bytes((int64_t)-1234567890123456, buffer, &sz)) {
-    ARRAY_PRINT2(" int64_t", -12345678, buffer, sz);
+    str.begin();
+    str.print(F(" int64_t(-1234567890123456) = {"));
+    str.HexArray(buffer, sz);
+    str.print(F(" }"));
+    Serial.println(str);
   }
   Serial.println();
 
