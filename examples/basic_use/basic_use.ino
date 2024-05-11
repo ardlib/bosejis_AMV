@@ -162,7 +162,7 @@ void loop() {
 }
 
 void Test_Ankitak() {
-  byte a; // To be used for Ankitak
+  byte a = 0; // To be used for Ankitak
   SEPARATOR("Ankitak usage");
   Serial.print("Response      : 0x");
   a = Ankitak.Response(a);
@@ -214,7 +214,7 @@ void Test_VastuBytes() {
   uint8_t buffer[BUF_SIZE];
   size_t sz, sz_alt;
   Buffer b;
-  char *data = "Hari Aum!";
+  const char *data = "Hari Aum!";
   SEPARATOR("Vastu-Bytes usage");
 
   sz = BUF_SIZE;
