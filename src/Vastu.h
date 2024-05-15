@@ -176,11 +176,11 @@
 #define QWORD 8
 
 // Buffer Compact type that describes both char[] and byte[] alike
-typedef struct Buffer_t {
-  uint8_t *bytes;
-  uint16_t size;
-  uint8_t isNullTerminated;
-  uint8_t _Reserved;
+typedef struct __attribute__((aligned(4))) Buffer_t {
+  uint8_t *bytes;           // Buffer
+  uint16_t size;            // Current Size of data in buffer
+  uint8_t isNullTerminated; // If Its a Zero terminated string
+  size_t capacity;          // Full capacity of the Buffer
   byte Vastu() {
     if (isNullTerminated != 0) {
       return Vastu_String;
@@ -189,75 +189,56 @@ typedef struct Buffer_t {
   }
 } Buffer;
 
-// Roop is the Multi Define wrapper to convert into Byte Array.
-typedef union _Roop_t {
-  uint16_t U16;
-  uint32_t U32;
-  uint64_t U64;
-  float F32;
-  double F64;
-  uint8_t U8;
-  int8_t I8;
-  int16_t I16;
-  int32_t I32;
-  int64_t I64;
-  uint8_t Bytes[8];
-} Roop;
-
 // ID is an 32-bit Identifier or Small Address type
-typedef union ID_t {
+typedef struct __attribute__((aligned(4))) ID_t {
   uint32_t val;
-  byte Bytes[4];
 } ID;
 
 // Proto is an 32-bit Protocol Identifier / Version type
-typedef union Proto_t {
+typedef struct __attribute__((aligned(4))) Proto_t {
   uint32_t val;
-  byte Bytes[4];
 } Proto;
 
 // CMD is 32-bit Command type
-typedef union CMD_t {
+typedef struct __attribute__((aligned(4))) CMD_t {
   uint32_t val;
-  byte Bytes[4];
 } CMD;
 
 // ADDR is the Full IEEE IPv6 64-Bit Address type
-typedef union ADDR_t {
+typedef struct __attribute__((aligned(4))) ADDR_t {
   uint64_t val;
-  byte Bytes[8];
 } ADDR;
 
 // CRC32 for sending CRC32 CCITT Poly type data
-typedef struct CRC32_t {
+typedef struct __attribute__((aligned(4))) CRC32_t {
   uint32_t val;
 } CRC32;
 
 // Sampurna for sending total transaction size in Bytes units.
 // This includes the whole block of data sent as one Transaction.
 // It may be split into Chunks as needed.
-typedef struct Sampurna_t {
+typedef struct __attribute__((aligned(4))) Sampurna_t {
   uint64_t val;
 } Sampurna;
 
 // Array is the size of a collection of Pulinda taken together
-typedef struct Array_t {
+typedef struct __attribute__((aligned(4))) Array_t {
   uint16_t val;
 } Array;
 
 // Tuples is the size of a MAP like sequence containing
 // Key:Value Pairs of Pulinda
-typedef struct Typles_t {
+typedef struct __attribute__((aligned(4))) Tuples_t {
   uint16_t val;
 } Tuples;
 
 // ChunkTotal is the total numbers of chunks in the sandesh
-typedef struct ChunkTotal_t {
+typedef struct __attribute__((aligned(4))) ChunkTotal_t {
   uint16_t val;
 } ChunkTotal;
 
 // ChunkIndex is the identifier for the current chunk
-typedef struct ChunkIndex_t {
+typedef struct __attribute__((aligned(4))) ChunkIndex_t {
   uint16_t val;
 } ChunkIndex;
 
@@ -463,6 +444,7 @@ public:
       return false;
     b->bytes = buf;
     b->size = size;
+    b->capacity = size;
     b->isNullTerminated = 0;
     return true;
   }
@@ -474,6 +456,7 @@ public:
   bool ToBuffer(char *buf, uint16_t size, Buffer *b) {
     b->bytes = (uint8_t *)buf;
     b->size = size;
+    b->capacity = size;
     b->isNullTerminated = 1;
     return true;
   }
@@ -670,90 +653,113 @@ public:
     return Bytes(val.val, b, sz);
   }
 
+  // From Buffer Allows to convert from Buffer to char[]
+
+  bool FromBuffer(Buffer *b, char *buf, uint16_t *sz) {
+    if (b == NULL || buf == NULL || sz == NULL)
+      return false;
+    // Check Null termination and Size
+    if (*sz < b->size || (b->isNullTerminated && *sz <= b->size)) {
+      return false;
+    }
+    memcpy(buf, b->bytes, b->size);
+    *sz = b->size;
+    if (b->isNullTerminated) {
+      buf[b->size] = 0;
+      *sz += 1;
+    }
+    return true;
+  }
+
   // From helps to convert Vastu from its uint8_t[] form back to
   // the actual data type.
 
-  bool From(uint8_t *b, size_t sz, uint16_t *val) {
-    byte v = Parichay(*val);
-    Roop r;
-    byte matra = Matra(v);
-    if (sz < matra) {
+  bool From(uint8_t *b, size_t sz, Buffer *val) {
+    uint16_t pack_size;
+    size_t total;
+    if (val == NULL || b == NULL || sz == 0)
+      return false;
+    // First 2 bytes are size
+    // pack_size = (((uint16_t)b[1]) << 8) | ((uint16_t)b[0]);
+    memcpy(&pack_size, b, sizeof(pack_size));
+    total = (sizeof(pack_size) + pack_size);
+    // Check Size
+    if (sz < total || val->capacity < pack_size) {
       return false;
     }
-    memcpy(r.Bytes, b, matra);
-    *val = r.U16;
+    // Copy Values
+    memcpy(val->bytes, &b[sizeof(pack_size)], pack_size);
+    val->size = pack_size;
+    return true;
+  }
+
+  bool From(uint8_t *b, size_t sz, uint16_t *val) {
+    if (val == NULL || b == NULL || sz == 0)
+      return false;
+    if (sz < sizeof(*val)) {
+      return false;
+    }
+    memcpy(val, b, sizeof(*val));
     return true;
   }
 
   bool From(uint8_t *b, size_t sz, uint32_t *val) {
-    byte v = Parichay(*val);
-    Roop r;
-    byte matra = Matra(v);
-    if (sz < matra) {
+    if (val == NULL || b == NULL || sz == 0)
+      return false;
+    if (sz < sizeof(*val)) {
       return false;
     }
-    memcpy(r.Bytes, b, matra);
-    *val = r.U32;
+    memcpy(val, b, sizeof(*val));
     return true;
   }
 
   bool From(uint8_t *b, size_t sz, uint64_t *val) {
-    byte v = Parichay(*val);
-    Roop r;
-    byte matra = Matra(v);
-    if (sz < matra) {
+    if (val == NULL || b == NULL || sz == 0)
+      return false;
+    if (sz < sizeof(*val)) {
       return false;
     }
-    memcpy(r.Bytes, b, matra);
-    *val = r.U64;
+    memcpy(val, b, sizeof(*val));
     return true;
   }
 
   bool From(uint8_t *b, size_t sz, float *val) {
-    byte v = Parichay(*val);
-    Roop r;
-    byte matra = Matra(v);
-    if (sz < matra) {
+    if (val == NULL || b == NULL || sz == 0)
+      return false;
+    if (sz < sizeof(*val)) {
       return false;
     }
-    memcpy(r.Bytes, b, matra);
-    *val = r.F32;
+    memcpy(val, b, sizeof(*val));
     return true;
   }
 
   bool From(uint8_t *b, size_t sz, double *val) {
-    byte v = Parichay(*val);
-    Roop r;
-    byte matra = Matra(v);
-    if (sz < matra) {
+    if (val == NULL || b == NULL || sz == 0)
+      return false;
+    if (sz < sizeof(*val)) {
       return false;
     }
-    memcpy(r.Bytes, b, matra);
-    *val = r.F64;
+    memcpy(val, b, sizeof(*val));
     return true;
   }
 
   bool From(uint8_t *b, size_t sz, uint8_t *val) {
-    byte v = Parichay(*val);
-    Roop r;
-    byte matra = Matra(v);
-    if (sz < matra) {
+    if (val == NULL || b == NULL || sz == 0)
+      return false;
+    if (sz < sizeof(*val)) {
       return false;
     }
-    memcpy(r.Bytes, b, matra);
-    *val = r.U8;
+    memcpy(val, b, sizeof(*val));
     return true;
   }
 
   bool From(uint8_t *b, size_t sz, int8_t *val) {
-    byte v = Parichay(*val);
-    Roop r;
-    byte matra = Matra(v);
-    if (sz < matra) {
+    if (val == NULL || b == NULL || sz == 0)
+      return false;
+    if (sz < sizeof(*val)) {
       return false;
     }
-    memcpy(r.Bytes, b, matra);
-    *val = r.I8;
+    memcpy(val, b, sizeof(*val));
     return true;
   }
 
@@ -762,57 +768,42 @@ public:
   }
 
   bool From(uint8_t *b, size_t sz, int16_t *val) {
-    byte v = Parichay(*val);
-    Roop r;
-    byte matra = Matra(v);
-    if (sz < matra) {
+    if (val == NULL || b == NULL || sz == 0)
+      return false;
+    if (sz < sizeof(*val)) {
       return false;
     }
-    memcpy(r.Bytes, b, matra);
-    *val = r.I16;
+    memcpy(val, b, sizeof(*val));
     return true;
   }
 
   bool From(uint8_t *b, size_t sz, int32_t *val) {
-    byte v = Parichay(*val);
-    Roop r;
-    byte matra = Matra(v);
-    if (sz < matra) {
+    if (val == NULL || b == NULL || sz == 0)
+      return false;
+    if (sz < sizeof(*val)) {
       return false;
     }
-    memcpy(r.Bytes, b, matra);
-    *val = r.I32;
+    memcpy(val, b, sizeof(*val));
     return true;
   }
 
   bool From(uint8_t *b, size_t sz, bool *val) {
-    byte v = Parichay(*val);
-    Roop r;
-    byte matra = Matra(v);
-    if (sz < matra) {
+    if (val == NULL || b == NULL || sz == 0)
+      return false;
+    if (sz < sizeof(*val)) {
       return false;
     }
-    memcpy(r.Bytes, b, matra);
-    *val = (r.U8 != 0) ? true : false;
+    memcpy(val, b, sizeof(*val));
     return true;
   }
 
   bool From(uint8_t *b, size_t sz, int64_t *val) {
-    uint64_t v = 0;
-    if (b == NULL || sz == 0 || val == NULL)
+    if (val == NULL || b == NULL || sz == 0)
       return false;
-    if (sz < sizeof(int64_t)) {
+    if (sz < sizeof(*val)) {
       return false;
     }
-    v += ((uint64_t)b[7]) << (8 * 7);
-    v += ((uint64_t)b[6]) << (8 * 6);
-    v += ((uint64_t)b[5]) << (8 * 5);
-    v += ((uint64_t)b[4]) << (8 * 4);
-    v += ((uint64_t)b[3]) << (8 * 3);
-    v += ((uint64_t)b[2]) << (8 * 2);
-    v += ((uint64_t)b[1]) << (8 * 1);
-    v += ((uint64_t)b[0]);
-    *val = (int64_t)val;
+    memcpy(val, b, sizeof(*val));
     return true;
   }
 
@@ -846,34 +837,6 @@ public:
 
   bool From(uint8_t *b, size_t sz, ChunkIndex *val) {
     return From(b, sz, &val->val);
-  }
-
-  bool From(uint8_t *b, size_t sz, Buffer *val) {
-    uint16_t pack_size;
-    size_t total;
-    if (val == NULL || b == NULL || sz == 0)
-      return false;
-    // First 2 bytes are size
-    pack_size = (((uint16_t)b[1]) << 8) | ((uint16_t)b[0]);
-    total = (sizeof(uint16_t) + pack_size);
-    if (sz < total || val->size < total) {
-      return false;
-    }
-    memcpy(val->bytes, &b[2], total);
-    val->size = pack_size;
-    return true;
-  }
-
-  // From Buffer Allows to convert from Buffer to uint8_t[] or char[]
-
-  bool FromBuffer(Buffer *b, uint8_t *buf, uint16_t *sz) {
-    if (b == NULL || buf == NULL || sz == NULL)
-      return false;
-    if (*sz < b->size) {
-      return false;
-    }
-    memcpy(buf, b->bytes, b->size);
-    return true;
   }
 };
 static Vastu_t Vastu;

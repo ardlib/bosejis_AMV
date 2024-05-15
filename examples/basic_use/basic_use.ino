@@ -44,32 +44,16 @@
   Serial.println(X);                                                           \
   Serial.println()
 #define STR_BUF_SIZE 200
+#define BUF_SIZE 100
 
 // Functions
 void Test_Ankitak();
 void Test_VastuBytes();
+void Test_VastuFrom();
 
 // Globals
 static char str_buf[STR_BUF_SIZE];
 PString str(str_buf, STR_BUF_SIZE);
-
-/*
-// Size Constants
-#define BUF_MAX 8
-#define CHARR_MAX 20
-#define VALUE2_MAX 6
-
-// Global Variables
-
-uint32_t value1 = 0x1234ABCD, rvalue1;
-size_t sz, sz2;
-uint8_t buf[BUF_MAX];
-ID name, rname;
-uint8_t value2[VALUE2_MAX] = {0x03, 0x04, 0xAA, 0xDB, 0x3C, 0x71};
-uint16_t checksum;
-char strm[CHARR_MAX];
-CRC32 crc;
-*/
 
 void setup() {
   delay(1000); // Startup Delay
@@ -83,47 +67,9 @@ void loop() {
   Test_Ankitak();
   delay(2000);
   Test_VastuBytes();
+  delay(2000);
+  Test_VastuFrom();
   /*
-  sz = BUF_MAX;
-  if (Vastu.Bytes(value1, buf, &sz)) {
-    Serial.println("Vastu - Bytes usage1");
-    Serial.print("Original Value: 0x");
-    Serial.println(value1, HEX);
-    Serial.print("Size          : ");
-    Serial.println(sz);
-    Serial.print("Converted     : ");
-    for (int i = 0; i < sz; i++) {
-      Serial.print(buf[i], HEX);
-      Serial.print(' ');
-    }
-    Serial.println();
-  }
-  if (Vastu.From(buf, sz, &rvalue1)) {
-    Serial.println("Vastu - From usage1");
-    Serial.print("Restored Value: 0x");
-    Serial.println(rvalue1, HEX);
-  }
-  name.val = 0x6789EF12;
-  sz = BUF_MAX;
-  if (Vastu.Bytes(name, buf, &sz)) {
-    Serial.println("Vastu - Bytes usage2");
-    Serial.print("Original Value: 0x");
-    Serial.println(name.val, HEX);
-    Serial.print("Size          : ");
-    Serial.println(sz);
-    Serial.print("Converted     : ");
-    for (int i = 0; i < sz; i++) {
-      Serial.print(buf[i], HEX);
-      Serial.print(' ');
-    }
-    Serial.println();
-  }
-  if (Vastu.From(buf, sz, &rname)) {
-    Serial.println("Vastu - From usage2");
-    Serial.print("Restored Value: 0x");
-    Serial.println(rname.val, HEX);
-  }
-  Serial.println();
   checksum = Checksum(value2, VALUE2_MAX);
   Serial.println("Checksum and HexStream usage");
   Serial.print("Input Data     : ");
@@ -147,17 +93,6 @@ void loop() {
   Serial.println(crc.val, HEX);
   Serial.println();
   Serial.println("Buffer and ToBuffer usage");
-
-  Buffer b;
-  if (Vastu.ToBuffer(value2, VALUE2_MAX, &b)) {
-    sz = BUF_MAX;
-    if (Vastu.Bytes(b, buf, &sz)) {
-      Serial.print("BufferValue: ");
-      sz2 = CHARR_MAX;
-      HexStream(buf, sz, strm, &sz2);
-      Serial.println(strm);
-    }
-  }
   */
 }
 
@@ -177,44 +112,43 @@ void Test_Ankitak() {
   Serial.println();
 }
 
-#define ARRAY_PRINT(X, Y, Z, SZ)                                             \
-  str.begin();\
-  str.print(F(X));                                                          \
-  str.print(F("(0x"));                                                      \
-  str.print(Y, HEX);                                                        \
-  str.print(F(") = {"));                                                    \
+#define ARRAY_PRINT(X, Y, Z, SZ)                                               \
+  str.begin();                                                                 \
+  str.print(F(X));                                                             \
+  str.print(F("(0x"));                                                         \
+  str.Hex(Y);                                                                  \
+  str.print(F(") = {"));                                                       \
   str.HexArray(Z, SZ);                                                         \
   str.print(F(" }"));                                                          \
   Serial.println(str);
 
 #define ARRAY_PRINT2(X, Y, Z, SZ)                                              \
   str.begin();                                                                 \
-  str.print(F(X));                                                          \
-  str.print(F("(0x"));                                                      \
-  str.print(Y, HEX);                                                        \
-  str.print(F(") = "));                                                     \
-  str.print(Y);                                                             \
-  str.print(F(" = {"));                                                     \
+  str.print(F(X));                                                             \
+  str.print(F("(0x"));                                                         \
+  str.Hex(Y);                                                                  \
+  str.print(F(") = "));                                                        \
+  str.print(Y);                                                                \
+  str.print(F(" = {"));                                                        \
   str.HexArray(Z, SZ);                                                         \
   str.print(F(" }"));                                                          \
   Serial.println(str);
 
 #define ARRAY_PRINT3(X, Y, Z, SZ, K)                                           \
   str.begin();                                                                 \
-  str.print(F(X));                                                          \
-  str.print(F("("));                                                        \
-  str.print(Y, K);                                                          \
-  str.print(F(") = {"));                                                    \
+  str.print(F(X));                                                             \
+  str.print(F("("));                                                           \
+  str.print(Y, K);                                                             \
+  str.print(F(") = {"));                                                       \
   str.HexArray(Z, SZ);                                                         \
   str.print(F(" }"));                                                          \
   Serial.println(str);
 
 void Test_VastuBytes() {
-#define BUF_SIZE 100
   uint8_t buffer[BUF_SIZE];
   size_t sz, sz_alt;
   Buffer b;
-  const char *data = "Hari Aum!";
+  const char data[10] = "Hari Aum!";
   SEPARATOR("Vastu-Bytes usage");
 
   sz = BUF_SIZE;
@@ -260,11 +194,7 @@ void Test_VastuBytes() {
 
   sz = BUF_SIZE;
   if (Vastu.Bytes((uint64_t)0x1234567890123456, buffer, &sz)) {
-      str.begin();
-      str.print(F(" uint64_t(0x1234567890123456) = {"));
-      str.HexArray(buffer, sz);
-      str.print(F(" }"));
-      Serial.println(str);
+    ARRAY_PRINT(" uint64_t", (uint64_t)0x1234567890123456, buffer, sz);
   }
   Serial.println();
 
@@ -312,11 +242,7 @@ void Test_VastuBytes() {
 
   sz = BUF_SIZE;
   if (Vastu.Bytes((int64_t)-1234567890123456, buffer, &sz)) {
-    str.begin();
-    str.print(F(" int64_t(-1234567890123456) = {"));
-    str.HexArray(buffer, sz);
-    str.print(F(" }"));
-    Serial.println(str);
+    ARRAY_PRINT(" int64_t", (int64_t)-1234567890123456, buffer, sz);
   }
   Serial.println();
 
@@ -326,5 +252,205 @@ void Test_VastuBytes() {
   if (Vastu.Bytes(id, buffer, &sz)) {
     ARRAY_PRINT(" ID", id.val, buffer, sz);
   }
+  Serial.println();
+}
+
+#define ARRAY_WITH_SIZE(PRINT, BUF, SZ)                                        \
+  str.print(F(PRINT));                                                         \
+  str.print(F("("));                                                           \
+  str.print(SZ);                                                               \
+  str.print(F(" bytes) :\n {"));                                               \
+  str.HexArray(BUF, SZ);                                                       \
+  str.println(F(" }"))
+
+#define ARRAY_WITH_SIZE_PRINT(PRINT, DATA, SZ, VAL)                            \
+  str.begin();                                                                 \
+  str.print(F(PRINT));                                                         \
+  str.print(F(" {"));                                                          \
+  str.HexArray(DATA, SZ);                                                      \
+  str.print(F(" } = 0x"));                                                     \
+  str.Hex(VAL);                                                                \
+  str.print(F(" = "));                                                         \
+  str.print(VAL);                                                              \
+  Serial.println(str);
+
+#define ARRAY_WITH_SIZE_DECIMAL(PRINT, DATA, SZ, VAL, DECIMAL)                 \
+  str.begin();                                                                 \
+  str.print(F(PRINT));                                                         \
+  str.print(F(" {"));                                                          \
+  str.HexArray(DATA, SZ);                                                      \
+  str.print(F(" } = "));                                                       \
+  str.print(VAL, DECIMAL);                                                     \
+  Serial.println(str);
+
+void Test_VastuFrom() {
+  uint8_t buffer[BUF_SIZE];
+  size_t sz, sz_alt;
+  Buffer b;
+  SEPARATOR("Vastu-From usage");
+  do {
+    sz = 11;
+    uint16_t buf_sz;
+    uint8_t data[] = {0x09, 0x00, /* Size */
+                      0x48, 0x61, 0x72, 0x69, 0x20, 0x41, 0x75, 0x6d, 0x21};
+    char buf[20];
+    if (!Vastu.ToBuffer(buffer, BUF_SIZE, &b))
+      return;
+    if (!Vastu.From(data, sz, &b))
+      return;
+    str.begin();
+    ARRAY_WITH_SIZE(" Input Data ", data, sz);
+    ARRAY_WITH_SIZE(" Buffer ", buffer, b.size);
+    Serial.println(str);
+    b.isNullTerminated = 1;
+    buf_sz = 20;
+    if (!Vastu.FromBuffer(&b, buf, &buf_sz))
+      return;
+    Serial.print(F(" String Size (Adjusted): "));
+    Serial.println(buf_sz);
+    Serial.print(F(" String Value          : "));
+    Serial.println(buf);
+  } while (0);
+  Serial.println();
+
+  /*
+
+ bool(0x1) = { 0x01 }
+
+ int64_t(-1234567890123456) = { 0x40, 0x45, 0x75, 0xc3, 0x2a, 0x9d, 0xfb, 0xff }
+
+ ID(0x12345678) = { 0x78, 0x56, 0x34, 0x12 }
+
+  */
+  do {
+    uint8_t data[2] = {0x34, 0x12};
+    uint16_t val;
+    if (!Vastu.ToBuffer(buffer, BUF_SIZE, &b))
+      return;
+    if (!Vastu.From(data, 2, &val))
+      return;
+    ARRAY_WITH_SIZE_PRINT(" uint16_t", data, 2, val);
+  } while (0);
+  Serial.println();
+
+  do {
+    uint8_t data[4] = {0x78, 0x56, 0x34, 0x12};
+    uint32_t val;
+    if (!Vastu.ToBuffer(buffer, BUF_SIZE, &b))
+      return;
+    if (!Vastu.From(data, 4, &val))
+      return;
+    ARRAY_WITH_SIZE_PRINT(" uint32_t", data, 4, val);
+  } while (0);
+  Serial.println();
+
+  do {
+    uint8_t data[8] = {0x56, 0x34, 0x12, 0x90, 0x78, 0x56, 0x34, 0x12};
+    uint64_t val;
+    if (!Vastu.ToBuffer(buffer, BUF_SIZE, &b))
+      return;
+    if (!Vastu.From(data, 8, &val))
+      return;
+    ARRAY_WITH_SIZE_PRINT(" uint64_t", data, 8, val);
+  } while (0);
+  Serial.println();
+
+  do {
+    uint8_t data[4] = {0xd0, 0x0f, 0x49, 0x40};
+    float val;
+    if (!Vastu.ToBuffer(buffer, BUF_SIZE, &b))
+      return;
+    if (!Vastu.From(data, 4, &val))
+      return;
+    ARRAY_WITH_SIZE_DECIMAL(" float", data, 4, val, 7);
+  } while (0);
+  Serial.println();
+
+  do {
+    uint8_t data[8] = {0x11, 0x2d, 0x44, 0x54, 0xfb, 0x21, 0x09, 0x40};
+    double val;
+    if (!Vastu.ToBuffer(buffer, BUF_SIZE, &b))
+      return;
+    if (!Vastu.From(data, 8, &val))
+      return;
+    ARRAY_WITH_SIZE_DECIMAL(" double", data, 8, (double)val, 14);
+  } while (0);
+  Serial.println();
+
+  do {
+    uint8_t data[1] = {0x12};
+    uint8_t val;
+    if (!Vastu.ToBuffer(buffer, BUF_SIZE, &b))
+      return;
+    if (!Vastu.From(data, 1, &val))
+      return;
+    ARRAY_WITH_SIZE_PRINT(" uint8_t", data, 1, val);
+  } while (0);
+  Serial.println();
+
+  do {
+    uint8_t data[1] = {0x20};
+    char val;
+    if (!Vastu.ToBuffer(buffer, BUF_SIZE, &b))
+      return;
+    if (!Vastu.From(data, 1, &val))
+      return;
+    ARRAY_WITH_SIZE_PRINT(" char", data, 1, val);
+  } while (0);
+  Serial.println();
+
+  do {
+    uint8_t data[2] = {0x2e, 0xfb};
+    int16_t val;
+    if (!Vastu.ToBuffer(buffer, BUF_SIZE, &b))
+      return;
+    if (!Vastu.From(data, 2, &val))
+      return;
+    ARRAY_WITH_SIZE_PRINT(" int16_t", data, 2, val);
+  } while (0);
+  Serial.println();
+
+  do {
+    uint8_t data[4] = {0xb2, 0x9e, 0x43, 0xff};
+    int32_t val;
+    if (!Vastu.ToBuffer(buffer, BUF_SIZE, &b))
+      return;
+    if (!Vastu.From(data, 4, &val))
+      return;
+    ARRAY_WITH_SIZE_PRINT(" int32_t", data, 4, val);
+  } while (0);
+  Serial.println();
+
+  do {
+    uint8_t data[1] = {0x01};
+    bool val;
+    if (!Vastu.ToBuffer(buffer, BUF_SIZE, &b))
+      return;
+    if (!Vastu.From(data, 1, &val))
+      return;
+    ARRAY_WITH_SIZE_PRINT(" bool", data, 1, val);
+  } while (0);
+  Serial.println();
+
+  do {
+    uint8_t data[8] = {0x40, 0x45, 0x75, 0xc3, 0x2a, 0x9d, 0xfb, 0xff};
+    int64_t val;
+    if (!Vastu.ToBuffer(buffer, BUF_SIZE, &b))
+      return;
+    if (!Vastu.From(data, 8, &val))
+      return;
+    ARRAY_WITH_SIZE_PRINT(" int64_t", data, 8, val);
+  } while (0);
+  Serial.println();
+
+  do {
+    uint8_t data[4] = {0x78, 0x56, 0x34, 0x12};
+    ID id;
+    if (!Vastu.ToBuffer(buffer, BUF_SIZE, &b))
+      return;
+    if (!Vastu.From(data, 4, &id))
+      return;
+    ARRAY_WITH_SIZE_PRINT(" ID", data, 4, id.val);
+  } while (0);
   Serial.println();
 }
