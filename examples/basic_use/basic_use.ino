@@ -283,6 +283,15 @@ void Test_VastuBytes() {
   str.print(VAL, DECIMAL);                                                     \
   Serial.println(str);
 
+#define ARRAY_WITH_SIZE_LARGE(PRINT, DATA, SZ, VAL)                            \
+  str.begin();                                                                 \
+  str.print(F(PRINT));                                                         \
+  str.print(F(" {"));                                                          \
+  str.HexArray(DATA, SZ);                                                      \
+  str.print(F(" } = 0x"));                                                     \
+  str.Hex(VAL);                                                                \
+  Serial.println(str);
+
 void Test_VastuFrom() {
   uint8_t buffer[BUF_SIZE];
   size_t sz, sz_alt;
@@ -351,7 +360,7 @@ void Test_VastuFrom() {
       return;
     if (!Vastu.From(data, 8, &val))
       return;
-    ARRAY_WITH_SIZE_PRINT(" uint64_t", data, 8, val);
+    ARRAY_WITH_SIZE_LARGE(" uint64_t", data, 8, val);
   } while (0);
   Serial.println();
 
@@ -439,7 +448,7 @@ void Test_VastuFrom() {
       return;
     if (!Vastu.From(data, 8, &val))
       return;
-    ARRAY_WITH_SIZE_PRINT(" int64_t", data, 8, val);
+    ARRAY_WITH_SIZE_LARGE(" int64_t", data, 8, val);
   } while (0);
   Serial.println();
 
