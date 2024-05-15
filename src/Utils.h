@@ -56,7 +56,7 @@ uint16_t Checksum(uint8_t *buf, size_t sz) {
 bool HexStream(uint8_t *in, size_t in_max, char *out, size_t *out_max) {
   size_t i, j;
   byte b;
-  if (*out_max < (in_max << 1)) {
+  if (*out_max < ((in_max << 1) + 1)) {
     return false;
   }
   memset(out, 0, *out_max);

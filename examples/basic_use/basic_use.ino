@@ -40,7 +40,7 @@
 
 // Defines
 #define SEPARATOR(X)                                                           \
-  Serial.println(F("---------------------------"));                            \
+  Serial.println(F("-----------------------------------------------------"));  \
   Serial.println(X);                                                           \
   Serial.println()
 #define STR_BUF_SIZE 200
@@ -50,6 +50,7 @@
 void Test_Ankitak();
 void Test_VastuBytes();
 void Test_VastuFrom();
+void Test_Utils();
 
 // Globals
 static char str_buf[STR_BUF_SIZE];
@@ -69,31 +70,8 @@ void loop() {
   Test_VastuBytes();
   delay(2000);
   Test_VastuFrom();
-  /*
-  checksum = Checksum(value2, VALUE2_MAX);
-  Serial.println("Checksum and HexStream usage");
-  Serial.print("Input Data     : ");
-  sz = CHARR_MAX;
-  HexStream(value2, VALUE2_MAX, strm, &sz);
-  Serial.println(strm);
-  Serial.print("Checksum Value : 0x");
-  Serial.println(checksum, HEX);
-  Serial.println();
-  Serial.println("HexDecode and CalcCRC32_CCITT usage");
-  sz2 = BUF_MAX;
-  HexDecode(strm, sz, buf, &sz2);
-  Serial.print("HexDecode      : ");
-  for (int i = 0; i < sz2; i++) {
-    Serial.print(buf[i], HEX);
-    Serial.print(' ');
-  }
-  Serial.println();
-  crc.val = CalcCRC32_CCITT(value2, VALUE2_MAX);
-  Serial.print("CalcCRC32_CCITT: ");
-  Serial.println(crc.val, HEX);
-  Serial.println();
-  Serial.println("Buffer and ToBuffer usage");
-  */
+  delay(2000);
+  Test_Utils();
 }
 
 void Test_Ankitak() {
@@ -322,15 +300,6 @@ void Test_VastuFrom() {
   } while (0);
   Serial.println();
 
-  /*
-
- bool(0x1) = { 0x01 }
-
- int64_t(-1234567890123456) = { 0x40, 0x45, 0x75, 0xc3, 0x2a, 0x9d, 0xfb, 0xff }
-
- ID(0x12345678) = { 0x78, 0x56, 0x34, 0x12 }
-
-  */
   do {
     uint8_t data[2] = {0x34, 0x12};
     uint16_t val;
@@ -460,6 +429,65 @@ void Test_VastuFrom() {
     if (!Vastu.From(data, 4, &id))
       return;
     ARRAY_WITH_SIZE_PRINT(" ID", data, 4, id.val);
+  } while (0);
+  Serial.println();
+}
+
+void Test_Utils() {
+  size_t sz, sz_alt;
+  SEPARATOR("Utils usage");
+  do {
+    uint16_t checksum;
+    uint8_t data[4] = {0x78, 0x56, 0x34, 0x12};
+    checksum = Checksum(data, 4);
+    str.begin();
+    str.print(F(" Input data for Checksum:\n {"));
+    str.HexArray(data, 4);
+    str.print(F(" }\n Checksum: 0x"));
+    str.Hex(checksum);
+    Serial.println(str);
+  } while (0);
+  Serial.println();
+
+  do {
+    uint8_t data[4] = {0x78, 0x56, 0x34, 0x12};
+    char buf[20];
+    size_t sz;
+    sz = 20;
+    if (!HexStream(data, 4, buf, &sz))
+      return;
+    Serial.print(F(" HexStream:\n "));
+    Serial.println(buf);
+  } while (0);
+  Serial.println();
+
+  do {
+    uint8_t data[4];
+    char buf[10] = {"78563412"};
+    size_t sz;
+    sz = 4;
+    if (!HexDecode(buf, strlen(buf), data, &sz))
+      return;
+    Serial.print(F(" Original string: "));
+    Serial.println(buf);
+    Serial.print(F(" HexDecode:\n {"));
+    str.begin();
+    str.HexArray(data, sz);
+    str.print(F(" }"));
+    Serial.println(str);
+  } while (0);
+  Serial.println();
+
+  do {
+    uint8_t data[4] = {0x78, 0x56, 0x34, 0x12};
+    CRC32 crc;
+    crc.val = CalcCRC32_CCITT(data, 4);
+    str.begin();
+    str.print(F(" Data: {"));
+    str.HexArray(data, 4);
+    str.print(F(" }\n CRC32: 0x"));
+    str.Hex(crc.val);
+    Serial.println(str);
   } while (0);
   Serial.println();
 }
