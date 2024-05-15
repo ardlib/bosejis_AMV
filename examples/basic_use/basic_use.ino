@@ -434,7 +434,6 @@ void Test_VastuFrom() {
 }
 
 void Test_Utils() {
-  size_t sz, sz_alt;
   SEPARATOR("Utils usage");
   do {
     uint16_t checksum;
