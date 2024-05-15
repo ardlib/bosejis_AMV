@@ -182,13 +182,13 @@ void Test_VastuBytes() {
 
   sz = BUF_SIZE;
   if (Vastu.Bytes((uint16_t)0x1234, buffer, &sz)) {
-    ARRAY_PRINT(" uint16_t", 0x1234, buffer, sz);
+    ARRAY_PRINT(" uint16_t", (uint16_t)0x1234, buffer, sz);
   }
   Serial.println();
 
   sz = BUF_SIZE;
   if (Vastu.Bytes((uint32_t)0x12345678, buffer, &sz)) {
-    ARRAY_PRINT(" uint32_t", 0x12345678, buffer, sz);
+    ARRAY_PRINT(" uint32_t", (uint32_t)0x12345678, buffer, sz);
   }
   Serial.println();
 
@@ -200,19 +200,19 @@ void Test_VastuBytes() {
 
   sz = BUF_SIZE;
   if (Vastu.Bytes((float)3.14159, buffer, &sz)) {
-    ARRAY_PRINT3(" float", 3.14159, buffer, sz, 7);
+    ARRAY_PRINT3(" float", float)3.14159, buffer, sz, 7);
   }
   Serial.println();
 
   sz = BUF_SIZE;
   if (Vastu.Bytes((double)3.14159265358979, buffer, &sz)) {
-    ARRAY_PRINT3(" double", 3.14159265358979, buffer, sz, 14);
+    ARRAY_PRINT3(" double", (double)3.14159265358979, buffer, sz, 14);
   }
   Serial.println();
 
   sz = BUF_SIZE;
   if (Vastu.Bytes((uint8_t)0x12, buffer, &sz)) {
-    ARRAY_PRINT(" uint8_t", 0x12, buffer, sz);
+    ARRAY_PRINT(" uint8_t", (uint8_t)0x12, buffer, sz);
   }
   Serial.println();
 
@@ -224,13 +224,13 @@ void Test_VastuBytes() {
 
   sz = BUF_SIZE;
   if (Vastu.Bytes((int16_t)-1234, buffer, &sz)) {
-    ARRAY_PRINT2(" int16_t", -1234, buffer, sz);
+    ARRAY_PRINT2(" int16_t", (int16_t)-1234, buffer, sz);
   }
   Serial.println();
 
   sz = BUF_SIZE;
   if (Vastu.Bytes((int32_t)-12345678, buffer, &sz)) {
-    ARRAY_PRINT2(" int32_t", -12345678, buffer, sz);
+    ARRAY_PRINT2(" int32_t", (int32_t)-12345678, buffer, sz);
   }
   Serial.println();
 
@@ -294,7 +294,7 @@ void Test_VastuBytes() {
 
 void Test_VastuFrom() {
   uint8_t buffer[BUF_SIZE];
-  size_t sz, sz_alt;
+  size_t sz;
   Buffer b;
   SEPARATOR("Vastu-From usage");
   do {
