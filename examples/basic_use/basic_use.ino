@@ -200,7 +200,7 @@ void Test_VastuBytes() {
 
   sz = BUF_SIZE;
   if (Vastu.Bytes((float)3.14159, buffer, &sz)) {
-    ARRAY_PRINT3(" float", float)3.14159, buffer, sz, 7);
+    ARRAY_PRINT3(" float", (float)3.14159, buffer, sz, 7);
   }
   Serial.println();
 
